@@ -1,8 +1,13 @@
+
 'use client'
 
 import type { Review } from '@/lib/data'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Star } from 'lucide-react'
+
+type ReviewCardProps = {
+  review: Review
+}
 
 function StarRating({ rating }: { rating: number }) {
     const stars = Array.from({ length: 5 }, (_, i) => i < Math.round(rating));

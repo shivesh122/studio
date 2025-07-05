@@ -58,11 +58,11 @@ export default function ProposalCard({ content, onRespond }: ProposalCardProps) 
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
         <Button variant="outline" size="sm" onClick={handleDecline}>
-          <XCircle />
+          <XCircle className="mr-2" />
           Decline
         </Button>
         <Button size="sm" onClick={handleAccept}>
-          <CheckCircle2 />
+          <CheckCircle2 className="mr-2" />
           Accept
         </Button>
       </CardFooter>
