@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -8,11 +9,20 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Shield, Users, Contact, Users2, Star } from 'lucide-react';
 import Link from 'next/link';
-import { getUsers, getPods, getExchangeTrends, type User, type Pod } from '@/lib/data';
+import { getUsers, getPods, getExchangeTrends, type User, type Pod, getCurrentUser } from '@/lib/data';
 import { Bar, BarChart as RechartsBarChart, Line, LineChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
+  const currentUser = useMemo(() => getCurrentUser(), []);
+
+  useEffect(() => {
+    if (currentUser.id !== 'user-1') {
+      router.push('/dashboard');
+    }
+  }, [currentUser, router]);
+
   const users = useMemo(() => getUsers(), []);
   const pods = useMemo(() => getPods(), []);
   const exchangeTrends = useMemo(() => getExchangeTrends(), []);
@@ -43,6 +53,9 @@ export default function AdminDashboardPage() {
     swaps: { label: 'Swaps', color: 'hsl(var(--primary))' },
   };
 
+  if (currentUser.id !== 'user-1') {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className="space-y-8">
