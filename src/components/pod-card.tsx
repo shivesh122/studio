@@ -1,4 +1,7 @@
 
+'use client'
+
+import { useState, useEffect } from "react";
 import type { Pod } from "@/lib/data";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,17 +15,37 @@ type PodCardProps = {
 }
 
 export default function PodCard({ pod }: PodCardProps) {
+    const [imageUrl, setImageUrl] = useState(pod.imageUrl);
+
+    useEffect(() => {
+        const checkForSavedImage = () => {
+            const savedImage = localStorage.getItem(`pod_banner_url_${pod.id}`);
+            if (savedImage) {
+                setImageUrl(savedImage);
+            }
+        };
+
+        checkForSavedImage();
+
+        // Listen for storage changes to update image if it's changed in another tab
+        window.addEventListener('storage', checkForSavedImage);
+
+        return () => {
+            window.removeEventListener('storage', checkForSavedImage);
+        };
+    }, [pod.id]);
 
     return (
         <Card className="hover:shadow-lg transition-shadow duration-300 flex flex-col group">
             <CardHeader className="p-0">
                 <div className="relative h-40 w-full overflow-hidden rounded-t-lg">
                     <Image 
-                        src={pod.imageUrl}
+                        src={imageUrl}
                         alt={pod.name}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         data-ai-hint={pod.dataAiHint}
+                        key={imageUrl}
                     />
                 </div>
             </CardHeader>
