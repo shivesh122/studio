@@ -1,8 +1,8 @@
 
 "use client"
 
-import { useEffect, useState, useRef } from "react";
-import { useFormStatus, useFormState } from "react-dom";
+import { useEffect, useState, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -43,7 +43,7 @@ function SubmitButton() {
 }
 
 export default function SendMessageButton({ user }: { user: User }) {
-    const [state, dispatch] = useFormState(sendMessage, initialState);
+    const [state, dispatch] = useActionState(sendMessage, initialState);
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
     const formRef = useRef<HTMLFormElement>(null);
