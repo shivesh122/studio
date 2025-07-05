@@ -75,6 +75,11 @@ export type User = {
     badges: Badge[];
 };
 
+export type ExchangeTrend = {
+    date: string;
+    swaps: number;
+};
+
 export const podEvents: PodEvent[] = [
     {
         id: 'event-1',
@@ -393,6 +398,16 @@ export const users: User[] = [
     },
 ];
 
+const exchangeTrends: ExchangeTrend[] = [
+    { date: 'Mon', swaps: 5 },
+    { date: 'Tue', swaps: 8 },
+    { date: 'Wed', swaps: 12 },
+    { date: 'Thu', swaps: 10 },
+    { date: 'Fri', swaps: 15 },
+    { date: 'Sat', swaps: 20 },
+    { date: 'Sun', swaps: 18 },
+];
+
 // --- DATA FUNCTIONS ---
 export const getPods = (): Pod[] => pods;
 export const getPodById = (id: string): Pod | undefined => pods.find(pod => pod.id === id);
@@ -401,8 +416,12 @@ export const getPodEvents = (podId: string): PodEvent[] => {
     return podEvents.filter(event => event.podId === podId).sort((a, b) => a.date.getTime() - b.date.getTime());
 };
 
+export const getUsers = (): User[] => users;
+
 export const getCurrentUser = (): User => users[0];
 
 export const getOtherUsers = (): User[] => users.slice(1);
 
 export const getUserById = (id: string): User | undefined => users.find(user => user.id === id);
+
+export const getExchangeTrends = (): ExchangeTrend[] => exchangeTrends;

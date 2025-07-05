@@ -4,7 +4,7 @@
 
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
-import { LayoutDashboard, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact, Gem } from 'lucide-react'
+import { LayoutDashboard, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact, Gem, Shield } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/messages', icon: MessageSquare, label: 'Messages' },
   { href: '/video-chat', icon: Video, label: 'Video Chat' },
   { href: '/profile', icon: UserIcon, label: 'My Profile' },
+  { href: '/admin', icon: Shield, label: 'Admin Dashboard' },
   { href: '/pricing', icon: Gem, label: 'Upgrade to Pro', isPro: true },
 ]
 
