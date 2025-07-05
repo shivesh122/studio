@@ -120,7 +120,7 @@ export default function PricingPage() {
                             plan.isFeatured && "border-primary border-2 shadow-lg md:scale-105"
                         )}
                     >
-                        <CardHeader className="text-center pt-8">
+                        <CardHeader className="text-center pt-8 px-4 sm:px-6">
                             {plan.isFeatured && (
                                 <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
                                     <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
@@ -129,12 +129,12 @@ export default function PricingPage() {
                                     </div>
                                 </div>
                             )}
-                            <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                            <CardTitle className="text-xl sm:text-2xl">{plan.name}</CardTitle>
                             <CardDescription>{plan.description}</CardDescription>
                         </CardHeader>
-                        <CardContent className="flex flex-col flex-grow">
+                        <CardContent className="flex flex-col flex-grow px-4 sm:px-6">
                              <div className="text-center mb-6">
-                                <span className="text-4xl font-bold">{plan.price}</span>
+                                <span className="text-3xl sm:text-4xl font-bold">{plan.price}</span>
                                 {plan.priceSuffix && <span className="text-muted-foreground">{plan.priceSuffix}</span>}
                             </div>
                             <ul className="space-y-3 flex-grow">
@@ -146,7 +146,7 @@ export default function PricingPage() {
                                 ))}
                             </ul>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="p-4 sm:p-6 mt-4">
                             <Button 
                                 className="w-full"
                                 variant={plan.isFeatured ? 'default' : 'outline'}
