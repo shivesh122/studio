@@ -13,9 +13,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getCurrentUser } from "@/lib/data";
-import { Save, PlusCircle, X } from "lucide-react";
+import { Save, PlusCircle, X, Camera } from "lucide-react";
 import Image from "next/image";
 import { cn } from '@/lib/utils';
+import React, { useState, useRef } from 'react';
 
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekends', 'Mornings', 'Afternoons', 'Evenings'] as const;
 const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Expert'] as const;
@@ -42,6 +43,15 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export default function ProfilePage() {
     const user = getCurrentUser();
     const { toast } = useToast();
+
+    // State for image previews
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+    const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+
+    // Refs for file inputs
+    const avatarInputRef = useRef<HTMLInputElement>(null);
+    const bannerInputRef = useRef<HTMLInputElement>(null);
+
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
@@ -70,26 +80,88 @@ export default function ProfilePage() {
     function onSubmit(data: ProfileFormValues) {
         // In a real application, you would send this data to your backend to update the user's profile.
         // For now, we'll just log it and show a success toast.
-        console.log("Profile updated:", data);
+        console.log("Profile updated:", {
+            ...data,
+            avatarUrl: avatarPreview || user.avatarUrl,
+            bannerUrl: bannerPreview || "https://placehold.co/1200x400.png"
+        });
         toast({
             title: "Profile Saved!",
             description: "Your changes have been successfully saved.",
         });
     }
 
+    // Handler for image selection
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>, setImagePreview: React.Dispatch<React.SetStateAction<string | null>>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <Card className="overflow-hidden">
-                    <div className="relative h-48 w-full bg-muted">
-                        <Image src="https://placehold.co/1200x400.png" alt="Profile banner" fill style={{objectFit: "cover"}} data-ai-hint="abstract texture" />
+                    <div className="relative h-48 w-full bg-muted group">
+                        <Image 
+                            src={bannerPreview || "https://placehold.co/1200x400.png"} 
+                            alt="Profile banner" 
+                            fill 
+                            style={{objectFit: "cover"}} 
+                            data-ai-hint="abstract texture"
+                            key={bannerPreview}
+                        />
+                         <input
+                            type="file"
+                            ref={bannerInputRef}
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => handleImageChange(e, setBannerPreview)}
+                        />
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="absolute top-4 right-4 bg-black/50 text-white hover:bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => bannerInputRef.current?.click()}
+                        >
+                            <Camera className="h-5 w-5" />
+                            <span className="sr-only">Change banner image</span>
+                        </Button>
                     </div>
                     <CardContent className="relative flex flex-col md:flex-row gap-6 p-6">
-                        <div className="-mt-20 md:-mt-24">
+                        <div className="-mt-20 md:-mt-24 relative group">
                             <Avatar className="h-32 w-32 border-4 border-background">
-                                <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint={user.dataAiHint} />
+                                <AvatarImage 
+                                    src={avatarPreview || user.avatarUrl} 
+                                    alt={user.name} 
+                                    data-ai-hint={user.dataAiHint}
+                                    key={avatarPreview}
+                                />
                                 <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
+                             <input
+                                type="file"
+                                ref={avatarInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={(e) => handleImageChange(e, setAvatarPreview)}
+                            />
+                             <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                className="absolute inset-0 m-auto h-12 w-12 rounded-full bg-black/50 text-white hover:bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                                onClick={() => avatarInputRef.current?.click()}
+                            >
+                                <Camera className="h-6 w-6" />
+                                <span className="sr-only">Change avatar</span>
+                            </Button>
                         </div>
                         <div className="flex-1 pt-2">
                              <div className="flex flex-wrap items-baseline justify-between gap-2">
