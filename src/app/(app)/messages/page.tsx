@@ -9,9 +9,15 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCurrentUser, getUserById, type User } from '@/lib/data';
 import { getMessagesForUser, type Message, addMessage } from '@/lib/messages';
-import { SendHorizonal, MessageSquare } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { SendHorizonal, MessageSquare, CalendarPlus, CheckCircle2, XCircle } from 'lucide-react';
+import { formatDistanceToNow, format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Calendar } from '@/components/ui/calendar';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import ProposalCard from '@/components/proposal-card';
+
 
 export default function MessagesPage() {
     const currentUser = useMemo(() => getCurrentUser(), []);
@@ -19,6 +25,11 @@ export default function MessagesPage() {
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const [messageContent, setMessageContent] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    
+    // State for proposal dialog
+    const [proposalOpen, setProposalOpen] = useState(false);
+    const [proposalDate, setProposalDate] = useState<Date | undefined>(new Date());
+    const [proposalTime, setProposalTime] = useState<string>('Afternoon');
 
     useEffect(() => {
         setAllMessages(getMessagesForUser(currentUser.id));
@@ -71,8 +82,73 @@ export default function MessagesPage() {
         setAllMessages(getMessagesForUser(currentUser.id));
         setMessageContent('');
     };
+    
+    const handleSendProposal = () => {
+        if (!proposalDate || !proposalTime || !selectedUserId) return;
+
+        const formattedDate = format(proposalDate, 'yyyy-MM-dd');
+        const proposalContent = `[PROPOSAL] Date: ${formattedDate}, Time: ${proposalTime}`;
+        
+        addMessage(currentUser.id, selectedUserId, proposalContent);
+        setAllMessages(getMessagesForUser(currentUser.id));
+        
+        setProposalOpen(false); // Close dialog
+    };
+    
+    const handleProposalResponse = (responseText: string) => {
+        if (!selectedUserId) return;
+        addMessage(currentUser.id, selectedUserId, responseText);
+        setAllMessages(getMessagesForUser(currentUser.id));
+    }
+
 
     const selectedConversation = conversations.find(c => c.user.id === selectedUserId);
+
+    const renderMessageContent = (message: Message) => {
+        // Don't show proposal card if the current user sent it, show a simple note instead.
+        if (message.content.startsWith('[PROPOSAL]')) {
+            if (message.senderId === currentUser.id) {
+                return (
+                    <div className="p-3">
+                         <p className="text-sm italic">You sent a session proposal.</p>
+                    </div>
+                );
+            }
+            return (
+                <ProposalCard 
+                    content={message.content} 
+                    onRespond={handleProposalResponse}
+                />
+            );
+        }
+    
+        if (message.content.startsWith('[ACCEPTED]') || message.content.startsWith('[DECLINED]')) {
+            const isAccepted = message.content.startsWith('[ACCEPTED]');
+            const notificationText = message.content.substring(message.content.indexOf(']') + 2);
+            return (
+                <div className={cn(
+                    "flex items-center gap-2 p-3 rounded-md text-sm",
+                    isAccepted ? 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300'
+                )}>
+                    {isAccepted ? <CheckCircle2 className="h-5 w-5"/> : <XCircle className="h-5 w-5"/>}
+                    <p>{notificationText}</p>
+                </div>
+            )
+        }
+        
+        // Default message content
+        return (
+            <div className="p-3">
+                <p className="text-sm">{message.content}</p>
+                <p className={cn(
+                    "text-xs mt-1 opacity-70",
+                    message.senderId === currentUser.id ? "text-right" : "text-left"
+                    )}>
+                    {formatDistanceToNow(message.timestamp, { addSuffix: true })}
+                </p>
+            </div>
+        );
+    };
 
     return (
         <div className="space-y-8">
@@ -136,19 +212,15 @@ export default function MessagesPage() {
                                                     <AvatarFallback>{selectedConversation.user.name.charAt(0)}</AvatarFallback>
                                                 </Avatar>
                                             )}
-                                            <div className={cn(
-                                                "max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-lg",
+                                             <div className={cn(
+                                                "max-w-xs md:max-w-md lg:max-w-lg rounded-lg",
                                                 message.senderId === currentUser.id 
                                                     ? "bg-primary text-primary-foreground" 
-                                                    : "bg-secondary"
+                                                    : "bg-secondary",
+                                                // Remove padding/bg for special cards, they have their own.
+                                                message.content.startsWith('[') && "bg-transparent p-0 text-foreground"
                                             )}>
-                                                <p className="text-sm">{message.content}</p>
-                                                <p className={cn(
-                                                    "text-xs mt-1 opacity-70",
-                                                    message.senderId === currentUser.id ? "text-right" : "text-left"
-                                                    )}>
-                                                    {formatDistanceToNow(message.timestamp, { addSuffix: true })}
-                                                </p>
+                                                {renderMessageContent(message)}
                                             </div>
                                         </div>
                                     ))}
@@ -163,6 +235,49 @@ export default function MessagesPage() {
                                         placeholder="Type your message..." 
                                         autoComplete="off"
                                     />
+                                    <Dialog open={proposalOpen} onOpenChange={setProposalOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button type="button" variant="ghost" size="icon" title="Propose a session time">
+                                                <CalendarPlus className="h-5 w-5" />
+                                                <span className="sr-only">Propose a session</span>
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>Propose a Session Time</DialogTitle>
+                                                <DialogDescription>
+                                                    Select a date and time to propose to {selectedConversation.user.name}.
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <div className="grid gap-4 py-4">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={proposalDate}
+                                                    onSelect={setProposalDate}
+                                                    disabled={(date) => date < new Date(new Date().setDate(new Date().getDate() - 1))}
+                                                    className="rounded-md border self-center"
+                                                />
+                                                <RadioGroup value={proposalTime} onValueChange={setProposalTime} className="grid grid-cols-3 gap-2">
+                                                    <div>
+                                                        <RadioGroupItem value="Mornings" id="mornings" className="peer sr-only" />
+                                                        <Label htmlFor="mornings" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Mornings</Label>
+                                                    </div>
+                                                    <div>
+                                                        <RadioGroupItem value="Afternoons" id="afternoons" className="peer sr-only" />
+                                                        <Label htmlFor="afternoons" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Afternoons</Label>
+                                                    </div>
+                                                    <div>
+                                                        <RadioGroupItem value="Evenings" id="evenings" className="peer sr-only" />
+                                                        <Label htmlFor="evenings" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">Evenings</Label>
+                                                    </div>
+                                                </RadioGroup>
+                                            </div>
+                                            <DialogFooter>
+                                                <Button onClick={handleSendProposal} disabled={!proposalDate}>Send Proposal</Button>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
+
                                     <Button type="submit" size="icon" disabled={!messageContent.trim()}>
                                         <SendHorizonal className="h-5 w-5" />
                                         <span className="sr-only">Send Message</span>
@@ -182,3 +297,4 @@ export default function MessagesPage() {
         </div>
     );
 }
+
