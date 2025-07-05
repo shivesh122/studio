@@ -1,13 +1,48 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
+
+import { useState, useMemo } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import UserCard from "@/components/user-card"
-import { getOtherUsers } from "@/lib/data"
-import { Search } from "lucide-react"
+import { getOtherUsers, type User } from "@/lib/data"
+import { Search, MapPin, Frown } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 
 export default function MembersPage() {
-  const otherUsers = getOtherUsers()
+  const otherUsers = useMemo(() => getOtherUsers(), []);
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [locationQuery, setLocationQuery] = useState('')
+  const [availabilityFilter, setAvailabilityFilter] = useState('')
+  const [levelFilter, setLevelFilter] = useState('')
+  const [ratingFilter, setRatingFilter] = useState('')
+
+  const filteredUsers = useMemo(() => {
+    return otherUsers.filter(user => {
+      const searchMatch = searchQuery.trim() === '' ||
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.skillsOffered.some(skill => skill.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        user.skillsDesired.some(skill => skill.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      const locationMatch = locationQuery.trim() === '' ||
+        user.location.toLowerCase().includes(locationQuery.toLowerCase());
+
+      const availabilityMatch = availabilityFilter === '' || user.availability.includes(availabilityFilter);
+
+      const levelMatch = levelFilter === '' ||
+        user.skillsOffered.some(skill => skill.level === levelFilter) ||
+        user.skillsDesired.some(skill => skill.level === levelFilter);
+      
+      const ratingMatch = ratingFilter === '' || user.trustScore >= parseFloat(ratingFilter);
+
+      return searchMatch && locationMatch && availabilityMatch && levelMatch && ratingMatch;
+    });
+  }, [otherUsers, searchQuery, locationQuery, availabilityFilter, levelFilter, ratingFilter]);
+
+  const handleSelectChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (value: string) => {
+    setter(value === 'all' ? '' : value);
+  };
 
   return (
     <div className="space-y-8">
@@ -18,41 +53,66 @@ export default function MembersPage() {
 
       <Card>
         <CardHeader>
-            <div className="flex flex-col md:flex-row gap-4">
-               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input placeholder="Search by name or skill..." className="w-full pl-9" />
-              </div>
-              <div className="flex gap-4">
-                <Select>
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Filter by availability" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="weekdays">Weekdays</SelectItem>
-                    <SelectItem value="weekends">Weekends</SelectItem>
-                    <SelectItem value="mornings">Mornings</SelectItem>
-                    <SelectItem value="afternoons">Afternoons</SelectItem>
-                    <SelectItem value="evenings">Evenings</SelectItem>
-                  </SelectContent>
+            <div className="flex flex-wrap items-center gap-4">
+                <div className="relative flex-grow min-w-[200px] sm:min-w-[240px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Search name or skill..." className="w-full pl-9" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                </div>
+                <div className="relative flex-grow min-w-[200px] sm:min-w-[240px]">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder="Filter by location..." className="w-full pl-9" value={locationQuery} onChange={(e) => setLocationQuery(e.target.value)} />
+                </div>
+                <Select value={availabilityFilter} onValueChange={handleSelectChange(setAvailabilityFilter)}>
+                    <SelectTrigger className="flex-grow min-w-[180px]">
+                        <SelectValue placeholder="Availability" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All Availabilities</SelectItem>
+                        <SelectItem value="Weekdays">Weekdays</SelectItem>
+                        <SelectItem value="Weekends">Weekends</SelectItem>
+                        <SelectItem value="Mornings">Mornings</SelectItem>
+                        <SelectItem value="Afternoons">Afternoons</SelectItem>
+                        <SelectItem value="Evenings">Evenings</SelectItem>
+                    </SelectContent>
                 </Select>
-                 <Select>
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Filter by skill level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="beginner">Beginner</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="expert">Expert</SelectItem>
-                  </SelectContent>
+                <Select value={levelFilter} onValueChange={handleSelectChange(setLevelFilter)}>
+                    <SelectTrigger className="flex-grow min-w-[180px]">
+                        <SelectValue placeholder="Skill Level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All Levels</SelectItem>
+                        <SelectItem value="Beginner">Beginner</SelectItem>
+                        <SelectItem value="Intermediate">Intermediate</SelectItem>
+                        <SelectItem value="Expert">Expert</SelectItem>
+                    </SelectContent>
                 </Select>
-              </div>
+                <Select value={ratingFilter} onValueChange={handleSelectChange(setRatingFilter)}>
+                    <SelectTrigger className="flex-grow min-w-[180px]">
+                        <SelectValue placeholder="Rating" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Any Rating</SelectItem>
+                        <SelectItem value="4.5">4.5+ Stars</SelectItem>
+                        <SelectItem value="4">4.0+ Stars</SelectItem>
+                        <SelectItem value="3">3.0+ Stars</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
         </CardHeader>
-        <CardContent className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-           {otherUsers.map(user => (
-            <UserCard key={user.id} user={user} />
-          ))}
+        <CardContent>
+            {filteredUsers.length > 0 ? (
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {filteredUsers.map(user => (
+                        <UserCard key={user.id} user={user} />
+                    ))}
+                </div>
+             ) : (
+                <div className="flex flex-col items-center justify-center text-center py-12 text-muted-foreground">
+                    <Frown className="h-12 w-12 mb-4" />
+                    <h3 className="text-xl font-semibold">No Members Found</h3>
+                    <p className="max-w-xs">Try adjusting your search filters to find more people in the community.</p>
+                </div>
+            )}
         </CardContent>
       </Card>
     </div>
