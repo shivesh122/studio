@@ -4,13 +4,14 @@
 
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
-import { Home, Users, MessageSquare, User as UserIcon } from 'lucide-react'
+import { Home, Users, MessageSquare, User as UserIcon, Sparkles } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
   { href: '/members', icon: Users, label: 'Find Members' },
+  { href: '/matcher', icon: Sparkles, label: 'Matcher' },
   { href: '/messages', icon: MessageSquare, label: 'Messages' },
   { href: '/profile', icon: UserIcon, label: 'My Profile' },
 ]
