@@ -3,8 +3,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser, getUserById, users } from "@/lib/data";
-import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck } from "lucide-react";
+import { getCurrentUser, getUserById } from "@/lib/data";
+import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck, Shield } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import SendMessageButton from "@/components/send-message-button";
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import ReviewCard from "@/components/review-card";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function UserProfilePage({ params }: { params: { id: string } }) {
     const user = getUserById(params.id);
@@ -127,7 +128,7 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                 <div className="lg:col-span-1">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Trust Score</CardTitle>
+                            <CardTitle>Trust & Verification</CardTitle>
                             <CardDescription>A measure of reputation on the platform.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -137,11 +138,19 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                             </div>
                             <Separator />
                             <ul className="space-y-3 text-sm text-muted-foreground">
-                                <li className="flex items-center gap-3">
-                                    <ShieldCheck className="h-5 w-5 text-primary" />
+                                <li className={cn("flex items-center gap-3", user.verifications.email && "text-foreground")}>
+                                    {user.verifications.email ? <ShieldCheck className="h-5 w-5 text-primary" /> : <Shield className="h-5 w-5 text-muted-foreground" />}
                                     <span>Email Verified</span>
                                 </li>
-                                <li className="flex items-center gap-3">
+                                <li className={cn("flex items-center gap-3", user.verifications.mobile && "text-foreground")}>
+                                    {user.verifications.mobile ? <ShieldCheck className="h-5 w-5 text-primary" /> : <Shield className="h-5 w-5 text-muted-foreground" />}
+                                    <span>Mobile Verified</span>
+                                </li>
+                                <li className={cn("flex items-center gap-3", user.verifications.id && "text-foreground")}>
+                                    {user.verifications.id ? <ShieldCheck className="h-5 w-5 text-primary" /> : <Shield className="h-5 w-5 text-muted-foreground" />}
+                                    <span>ID Verified <span className="text-xs ">(Optional)</span></span>
+                                </li>
+                                <li className="flex items-center gap-3 text-foreground">
                                     <Star className="h-5 w-5 text-primary" />
                                     <span>{totalReviews} {totalReviews === 1 ? 'Review' : 'Reviews'}</span>
                                 </li>

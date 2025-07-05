@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getCurrentUser } from "@/lib/data";
-import { Save, PlusCircle, X, Camera } from "lucide-react";
+import { Save, PlusCircle, X, Camera, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { cn } from '@/lib/utils';
 import React, { useState, useRef, useEffect } from 'react';
@@ -431,6 +431,56 @@ export default function ProfilePage() {
                                     </FormItem>
                                 )}
                             />
+                        </CardContent>
+                    </Card>
+                    <Card className="lg:col-span-2 xl:col-span-3">
+                        <CardHeader>
+                            <CardTitle>Account Verification</CardTitle>
+                            <CardDescription>Enhance your trust score by verifying your account.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <p className="font-medium text-sm">Email</p>
+                                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                                </div>
+                                {user.verifications.email ? (
+                                    <div className="flex items-center gap-2 text-primary text-sm">
+                                        <ShieldCheck className="h-5 w-5" />
+                                        <span>Verified</span>
+                                    </div>
+                                ) : (
+                                    <Button type="button" variant="outline" size="sm">Verify</Button>
+                                )}
+                            </div>
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <p className="font-medium text-sm">Phone Number</p>
+                                    <p className="text-sm text-muted-foreground">{user.phone || 'Not provided'}</p>
+                                </div>
+                                {user.verifications.mobile ? (
+                                    <div className="flex items-center gap-2 text-primary text-sm">
+                                        <ShieldCheck className="h-5 w-5" />
+                                        <span>Verified</span>
+                                    </div>
+                                ) : (
+                                    <Button type="button" variant="outline" size="sm">Verify</Button>
+                                )}
+                            </div>
+                            <div className="flex items-center justify-between rounded-md border p-3">
+                                <div>
+                                    <p className="font-medium text-sm">Identity (ID)</p>
+                                    <p className="text-sm text-muted-foreground">Upload a government-issued ID.</p>
+                                </div>
+                                {user.verifications.id ? (
+                                    <div className="flex items-center gap-2 text-primary text-sm">
+                                        <ShieldCheck className="h-5 w-5" />
+                                        <span>Verified</span>
+                                    </div>
+                                ) : (
+                                    <Button type="button" variant="outline" size="sm">Upload ID</Button>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>

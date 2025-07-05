@@ -20,6 +20,7 @@ export type User = {
     id: string;
     name: string;
     email: string;
+    phone?: string;
     avatarUrl: string;
     dataAiHint?: string;
     location: string;
@@ -29,6 +30,11 @@ export type User = {
     availability: string[];
     trustScore: number;
     reviews: Review[];
+    verifications: {
+        email: boolean;
+        mobile: boolean;
+        id: boolean;
+    };
 };
 
 export const users: User[] = [
@@ -36,6 +42,7 @@ export const users: User[] = [
         id: 'user-1',
         name: 'Alex Doe',
         email: 'alex.doe@example.com',
+        phone: '555-0101',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'woman programming',
         location: 'Greenwood',
@@ -73,11 +80,17 @@ export const users: User[] = [
                 date: '1 week ago'
             }
         ],
+        verifications: {
+            email: true,
+            mobile: true,
+            id: false,
+        },
     },
     {
         id: 'user-2',
         name: 'Jane Smith',
         email: 'jane.smith@example.com',
+        phone: '555-0102',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'woman writing',
         location: 'Greenwood',
@@ -105,11 +118,17 @@ export const users: User[] = [
                 date: '3 days ago'
             }
         ],
+        verifications: {
+            email: true,
+            mobile: false,
+            id: false,
+        },
     },
     {
         id: 'user-3',
         name: 'Bob Johnson',
         email: 'bob.johnson@example.com',
+        phone: '555-0103',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'man with charts',
         location: 'Greenwood',
@@ -126,11 +145,17 @@ export const users: User[] = [
         availability: ['Evenings'],
         trustScore: 4.2,
         reviews: [],
+        verifications: {
+            email: true,
+            mobile: true,
+            id: false,
+        },
     },
     {
         id: 'user-4',
         name: 'Alice Williams',
         email: 'alice.williams@example.com',
+        phone: '555-0104',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'woman gardening',
         location: 'Greenwood',
@@ -158,11 +183,17 @@ export const users: User[] = [
                 date: '1 month ago'
             },
         ],
+        verifications: {
+            email: true,
+            mobile: true,
+            id: true,
+        },
     },
     {
         id: 'user-5',
         name: 'Charlie Brown',
         email: 'charlie.brown@example.com',
+        phone: '555-0105',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'man speaking',
         location: 'Greenwood',
@@ -178,11 +209,17 @@ export const users: User[] = [
         availability: ['Weekdays', 'Weekends'],
         trustScore: 4.0,
         reviews: [],
+        verifications: {
+            email: true,
+            mobile: false,
+            id: false,
+        },
     },
     {
         id: 'user-6',
         name: 'Diana Prince',
         email: 'diana.prince@example.com',
+        phone: '555-0106',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'woman sculpting',
         location: 'Greenwood',
@@ -199,11 +236,17 @@ export const users: User[] = [
         availability: ['Afternoons'],
         trustScore: 4.7,
         reviews: [],
+        verifications: {
+            email: true,
+            mobile: true,
+            id: true,
+        },
     },
     {
         id: 'user-7',
         name: 'Bruce Wayne',
         email: 'bruce.wayne@example.com',
+        phone: '555-0107',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'man tinkering',
         location: 'Greenwood',
@@ -220,11 +263,17 @@ export const users: User[] = [
         availability: ['Evenings'],
         trustScore: 3.8,
         reviews: [],
+        verifications: {
+            email: true,
+            mobile: false,
+            id: false,
+        },
     },
      {
         id: 'user-8',
         name: 'Clark Kent',
         email: 'clark.kent@example.com',
+        phone: '555-0108',
         avatarUrl: 'https://placehold.co/300x300.png',
         dataAiHint: 'man writing newspaper',
         location: 'Greenwood',
@@ -241,6 +290,11 @@ export const users: User[] = [
         availability: ['Mornings', 'Evenings'],
         trustScore: 4.9,
         reviews: [],
+        verifications: {
+            email: true,
+            mobile: true,
+            id: false,
+        },
     },
 ];
 
