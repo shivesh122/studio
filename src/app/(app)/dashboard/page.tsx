@@ -14,8 +14,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-headline text-foreground/90">Welcome back, {currentUser.name}!</h1>
-        <p className="text-muted-foreground mt-1">Here's what's happening in your community.</p>
+        <h1 className="text-3xl font-bold font-headline text-foreground/90">Hello, {currentUser.name.split(' ')[0]}!</h1>
+        <p className="text-muted-foreground mt-1">Swap skills locally.</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

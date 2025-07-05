@@ -25,11 +25,13 @@ export default function AppLayout({
       <SidebarProvider>
         <Sidebar>
           <SidebarHeader>
-            <Link href="/dashboard" className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-primary/20 border border-primary/30 text-primary rounded-lg flex items-center justify-center font-bold text-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-repeat-2 h-5 w-5"><path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v7"/></svg>
-              </div>
-              <h1 className="font-semibold text-lg font-headline">SkillSwap Local</h1>
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7 text-blue-600">
+                  <path d="M10.28 4.71C8.35 2.77 5.25 2.77 3.32 4.71c-1.94 1.94-1.94 5.04 0 6.97 1.93 1.94 5.03 1.94 6.96 0"/>
+                  <path d="m11.7 12.33 7.8 7.8"/>
+                  <path d="M20.68 3.32c1.94 1.94 1.94 5.04 0 6.97-1.94 1.94-5.04 1.94-6.97 0"/>
+              </svg>
+              <h1 className="font-semibold text-xl font-headline">SkillSwap Pods</h1>
             </Link>
           </SidebarHeader>
           <SidebarContent>

@@ -92,7 +92,7 @@ export default function SendMessageButton({ user }: { user: User }) {
                             <Textarea 
                                 id="message"
                                 name="message" 
-                                placeholder={`Hi ${user.name}, I saw your profile on SkillSwap...`} 
+                                placeholder={`Hi ${user.name}, I saw your profile on SkillSwap Pods...`} 
                                 className="min-h-[120px]"
                                 required
                             />
