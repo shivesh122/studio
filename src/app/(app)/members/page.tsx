@@ -9,6 +9,8 @@ import { Search, MapPin, Frown, Gem } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 
 export default function MembersPage() {
@@ -67,9 +69,18 @@ export default function MembersPage() {
 
   return (
     <div className="space-y-8">
-       <div>
-        <h1 className="text-3xl font-bold font-headline text-foreground/90">Find Members</h1>
-        <p className="text-muted-foreground mt-1">Browse and connect with other members in your community.</p>
+       <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold font-headline text-foreground/90">Find Members</h1>
+          <p className="text-muted-foreground mt-1">Browse and connect with other members in your community.</p>
+        </div>
+        <div className="flex items-center space-x-2 p-2 rounded-md border bg-card">
+            <Switch id="pro-mode" checked={isPro} onCheckedChange={setIsPro} />
+            <Label htmlFor="pro-mode" className="flex items-center gap-2 cursor-pointer">
+              <Gem className="h-4 w-4 text-primary" />
+              Pro Mode (Demo)
+            </Label>
+        </div>
       </div>
 
       <Card>
