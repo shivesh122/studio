@@ -36,13 +36,13 @@ export default function DashboardPage() {
               <div>
                 <h3 className="font-semibold mb-2 text-foreground/90">Skills I Offer</h3>
                 <div className="flex flex-wrap gap-2">
-                  {currentUser.skillsOffered.map(skill => <Badge key={skill} variant="secondary">{skill}</Badge>)}
+                  {currentUser.skillsOffered.map(skill => <Badge key={skill.name} variant="secondary">{skill.name} <span className="ml-1 opacity-70">({skill.level})</span></Badge>)}
                 </div>
               </div>
                <div>
                 <h3 className="font-semibold mb-2 text-foreground/90">Skills I Want</h3>
                 <div className="flex flex-wrap gap-2">
-                  {currentUser.skillsDesired.map(skill => <Badge key={skill} variant="outline">{skill}</Badge>)}
+                  {currentUser.skillsDesired.map(skill => <Badge key={skill.name} variant="outline">{skill.name} <span className="ml-1 opacity-70">({skill.level})</span></Badge>)}
                 </div>
               </div>
             </div>

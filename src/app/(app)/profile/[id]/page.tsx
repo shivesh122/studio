@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUserById, users } from "@/lib/data";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import SendMessageButton from "@/components/send-message-button";
@@ -38,9 +38,10 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                             <h1 className="text-2xl font-bold font-headline">{user.name}</h1>
                             <SendMessageButton user={user} />
                         </div>
-                        <div className="flex items-center gap-4 text-muted-foreground mt-2">
+                        <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-muted-foreground mt-2">
                             <div className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {user.location}</div>
                             <div className="flex items-center gap-1.5"><Mail className="h-4 w-4" /> {user.email}</div>
+                            <div className="flex items-center gap-1.5"><CalendarDays className="h-4 w-4" /> {user.availability.join(', ')}</div>
                         </div>
                          <p className="mt-4 text-sm text-foreground/80">{user.bio}</p>
                     </div>
@@ -51,22 +52,30 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                 <Card>
                     <CardHeader>
                         <CardTitle>Skills Offered</CardTitle>
-                        <CardDescription>Skills {user.name} can share with the community.</CardDescription>
+                        <CardDescription>Skills {user.name.split(' ')[0]} can share with the community.</CardDescription>
                     </CardHeader>
                     <CardContent>
                          <div className="flex flex-wrap gap-2">
-                            {user.skillsOffered.map(skill => <Badge key={skill} variant="secondary" className="text-base py-1 px-3">{skill}</Badge>)}
+                            {user.skillsOffered.map(skill => (
+                                <Badge key={skill.name} variant="secondary" className="text-base py-1 px-3">
+                                    {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
+                                </Badge>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>
                  <Card>
                     <CardHeader>
                         <CardTitle>Skills Wanted</CardTitle>
-                        <CardDescription>Skills {user.name} is interested in learning.</CardDescription>
+                        <CardDescription>Skills {user.name.split(' ')[0]} is interested in learning.</CardDescription>
                     </CardHeader>
                     <CardContent>
                          <div className="flex flex-wrap gap-2">
-                            {user.skillsDesired.map(skill => <Badge key={skill} variant="outline" className="text-base py-1 px-3">{skill}</Badge>)}
+                            {user.skillsDesired.map(skill => (
+                                <Badge key={skill.name} variant="outline" className="text-base py-1 px-3">
+                                   {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
+                                </Badge>
+                            ))}
                         </div>
                     </CardContent>
                 </Card>

@@ -7,12 +7,14 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, Bot, Sparkles } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import type { User } from '@/lib/data'
+import type { User, Skill } from '@/lib/data'
 
 type Props = {
   currentUser: User;
   otherUsers: User[];
 }
+
+const formatSkills = (skills: Skill[]) => skills.map(s => `${s.name} (${s.level})`).join(', ');
 
 export default function AiSuggestions({ currentUser, otherUsers }: Props) {
     const [loading, setLoading] = useState(false)
@@ -23,12 +25,12 @@ export default function AiSuggestions({ currentUser, otherUsers }: Props) {
         setLoading(true)
         setResult(null)
 
-        const userProfileString = `Name: ${currentUser.name}, Skills Offered: ${currentUser.skillsOffered.join(', ')}, Skills Desired: ${currentUser.skillsDesired.join(', ')}`;
-        const otherUserProfilesStrings = otherUsers.map(user => `Name: ${user.name}, Skills Offered: ${user.skillsOffered.join(', ')}, Skills Desired: ${user.skillsDesired.join(', ')}`);
+        const userProfileString = `Name: ${currentUser.name}, Skills Offered: ${formatSkills(currentUser.skillsOffered)}, Skills Desired: ${formatSkills(currentUser.skillsDesired)}`;
+        const otherUserProfilesStrings = otherUsers.map(user => `Name: ${user.name}, Skills Offered: ${formatSkills(user.skillsOffered)}, Skills Desired: ${formatSkills(user.skillsDesired)}`);
 
         const input: SuggestSkillMatchesInput = {
             userProfile: userProfileString,
-            desiredSkills: currentUser.skillsDesired.join(', '),
+            desiredSkills: formatSkills(currentUser.skillsDesired),
             userLocation: currentUser.location,
             otherUserProfiles: otherUserProfilesStrings
         }

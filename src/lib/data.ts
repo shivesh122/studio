@@ -1,5 +1,10 @@
 // src/lib/data.ts
 
+export type Skill = {
+    name: string;
+    level: 'Beginner' | 'Intermediate' | 'Expert';
+};
+
 export type User = {
     id: string;
     name: string;
@@ -8,8 +13,9 @@ export type User = {
     dataAiHint?: string;
     location: string;
     bio: string;
-    skillsOffered: string[];
-    skillsDesired: string[];
+    skillsOffered: Skill[];
+    skillsDesired: Skill[];
+    availability: string[];
 };
 
 export const users: User[] = [
@@ -21,8 +27,16 @@ export const users: User[] = [
         dataAiHint: 'woman programming',
         location: 'Greenwood',
         bio: 'Full-stack developer with a passion for creating beautiful and functional web applications. I love hiking and exploring new coffee shops.',
-        skillsOffered: ['Web Development', 'Graphic Design', 'Photography'],
-        skillsDesired: ['Creative Writing', 'Data Analysis', 'Public Speaking'],
+        skillsOffered: [
+            { name: 'Web Development', level: 'Expert' },
+            { name: 'Graphic Design', level: 'Intermediate' },
+            { name: 'Photography', level: 'Beginner' }
+        ],
+        skillsDesired: [
+            { name: 'Creative Writing', level: 'Beginner' },
+            { name: 'Data Analysis', level: 'Beginner' },
+        ],
+        availability: ['Weekdays', 'Evenings'],
     },
     {
         id: 'user-2',
@@ -32,8 +46,16 @@ export const users: User[] = [
         dataAiHint: 'woman writing',
         location: 'Greenwood',
         bio: 'Content strategist and writer, helping brands tell their story. In my free time, I write short stories and practice calligraphy.',
-        skillsOffered: ['Creative Writing', 'Marketing', 'Calligraphy'],
-        skillsDesired: ['Web Development', 'SEO Basics'],
+        skillsOffered: [
+            { name: 'Creative Writing', level: 'Expert' },
+            { name: 'Marketing', level: 'Intermediate' },
+            { name: 'Calligraphy', level: 'Intermediate' }
+        ],
+        skillsDesired: [
+            { name: 'Web Development', level: 'Beginner' },
+            { name: 'SEO Basics', level: 'Beginner' },
+        ],
+        availability: ['Weekends'],
     },
     {
         id: 'user-3',
@@ -43,8 +65,16 @@ export const users: User[] = [
         dataAiHint: 'man with charts',
         location: 'Greenwood',
         bio: 'Data analyst who loves finding patterns in numbers. I can help you make sense of your data. I also enjoy board games and cycling.',
-        skillsOffered: ['Data Analysis', 'Project Management', 'Excel'],
-        skillsDesired: ['Graphic Design', 'Python'],
+        skillsOffered: [
+            { name: 'Data Analysis', level: 'Expert' },
+            { name: 'Project Management', level: 'Expert' },
+            { name: 'Excel', level: 'Intermediate' }
+        ],
+        skillsDesired: [
+            { name: 'Graphic Design', level: 'Beginner' },
+            { name: 'Python', level: 'Beginner' },
+        ],
+        availability: ['Evenings'],
     },
     {
         id: 'user-4',
@@ -54,8 +84,16 @@ export const users: User[] = [
         dataAiHint: 'woman gardening',
         location: 'Greenwood',
         bio: 'I run a small urban farm and teach yoga on the weekends. I believe in sustainable living and mindfulness.',
-        skillsOffered: ['Gardening', 'Cooking', 'Yoga Instruction'],
-        skillsDesired: ['Photography', 'Web Development'],
+        skillsOffered: [
+            { name: 'Gardening', level: 'Expert' },
+            { name: 'Cooking', level: 'Intermediate' },
+            { name: 'Yoga Instruction', level: 'Expert' }
+        ],
+        skillsDesired: [
+            { name: 'Photography', level: 'Beginner' },
+            { name: 'Web Development', level: 'Beginner' },
+        ],
+        availability: ['Weekends', 'Mornings'],
     },
     {
         id: 'user-5',
@@ -65,8 +103,15 @@ export const users: User[] = [
         dataAiHint: 'man speaking',
         location: 'Greenwood',
         bio: 'Professional event planner and public speaking coach. I can help you organize your next event or nail your next presentation.',
-        skillsOffered: ['Public Speaking', 'Event Planning', 'MC Services'],
-        skillsDesired: ['Graphic Design', 'Social Media Marketing'],
+        skillsOffered: [
+            { name: 'Public Speaking', level: 'Expert' },
+            { name: 'Event Planning', level: 'Expert' },
+        ],
+        skillsDesired: [
+            { name: 'Graphic Design', level: 'Beginner' },
+            { name: 'Social Media Marketing', level: 'Intermediate' },
+        ],
+        availability: ['Weekdays', 'Weekends'],
     },
     {
         id: 'user-6',
@@ -76,8 +121,16 @@ export const users: User[] = [
         dataAiHint: 'woman sculpting',
         location: 'Greenwood',
         bio: 'Artist and sculptor with a love for ancient history. I work with clay and metal to create unique pieces.',
-        skillsOffered: ['Sculpting', 'Art History', 'Pottery'],
-        skillsDesired: ['Digital Marketing', 'Photography'],
+        skillsOffered: [
+            { name: 'Sculpting', level: 'Expert' },
+            { name: 'Art History', level: 'Intermediate' },
+            { name: 'Pottery', level: 'Expert' },
+        ],
+        skillsDesired: [
+            { name: 'Digital Marketing', level: 'Beginner' },
+            { name: 'Photography', level: 'Intermediate' },
+        ],
+        availability: ['Afternoons'],
     },
     {
         id: 'user-7',
@@ -87,8 +140,16 @@ export const users: User[] = [
         dataAiHint: 'man tinkering',
         location: 'Greenwood',
         bio: 'I am an engineer and philanthropist with an interest in new technologies and home security systems.',
-        skillsOffered: ['Mechanical Engineering', 'Gadget Repair', 'Home Security'],
-        skillsDesired: ['Cooking', 'Meditation'],
+        skillsOffered: [
+            { name: 'Mechanical Engineering', level: 'Expert' },
+            { name: 'Gadget Repair', level: 'Expert' },
+            { name: 'Home Security', level: 'Expert' }
+        ],
+        skillsDesired: [
+            { name: 'Cooking', level: 'Beginner' },
+            { name: 'Meditation', level: 'Beginner' },
+        ],
+        availability: ['Evenings'],
     },
      {
         id: 'user-8',
@@ -98,8 +159,16 @@ export const users: User[] = [
         dataAiHint: 'man writing newspaper',
         location: 'Greenwood',
         bio: 'Journalist by day, always looking for the truth. I enjoy a quiet life and helping others when I can.',
-        skillsOffered: ['Journalism', 'Copywriting', 'Fact Checking'],
-        skillsDesired: ['Photography', 'Public Speaking'],
+        skillsOffered: [
+            { name: 'Journalism', level: 'Expert' },
+            { name: 'Copywriting', level: 'Intermediate' },
+            { name: 'Fact Checking', level: 'Expert' }
+        ],
+        skillsDesired: [
+            { name: 'Photography', level: 'Beginner' },
+            { name: 'Public Speaking', level: 'Intermediate' },
+        ],
+        availability: ['Mornings', 'Evenings'],
     },
 ];
 

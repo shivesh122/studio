@@ -31,7 +31,7 @@ export default function UserCard({ user }: UserCardProps) {
                         <h4 className="font-semibold text-sm mb-2 text-foreground/80">Skills they offer</h4>
                         <div className="flex flex-wrap gap-1.5">
                             {user.skillsOffered.slice(0, 3).map(skill => (
-                                <Badge key={skill} variant="secondary">{skill}</Badge>
+                                <Badge key={skill.name} variant="secondary">{skill.name}</Badge>
                             ))}
                         </div>
                     </div>
@@ -39,7 +39,7 @@ export default function UserCard({ user }: UserCardProps) {
                         <h4 className="font-semibold text-sm mb-2 text-foreground/80">Skills they want</h4>
                         <div className="flex flex-wrap gap-1.5">
                              {user.skillsDesired.slice(0, 3).map(skill => (
-                                <Badge key={skill} variant="outline">{skill}</Badge>
+                                <Badge key={skill.name} variant="outline">{skill.name}</Badge>
                             ))}
                         </div>
                     </div>
