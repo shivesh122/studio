@@ -93,7 +93,7 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
                     <Image src={bannerUrl!} alt={`${pod.name} banner`} fill style={{objectFit: "cover"}} className="object-cover" data-ai-hint={pod.dataAiHint} key={bannerUrl} />
                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                      <div className="absolute bottom-0 left-0 p-6 text-white">
-                        <h1 className="text-4xl font-bold font-headline">{pod.name}</h1>
+                        <h1 className="text-3xl sm:text-4xl font-bold font-headline">{pod.name}</h1>
                         <p className="max-w-xl mt-1 opacity-90">{pod.description}</p>
                         <div className="flex items-center gap-4 mt-4">
                             <div className="flex items-center gap-1.5"><Users className="h-4 w-4" /> {pod.members.length} Members</div>

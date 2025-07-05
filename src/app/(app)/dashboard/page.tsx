@@ -67,7 +67,7 @@ export default function DashboardPage() {
 function QuickLinkCard({ href, icon: Icon, title, description }: { href: string; icon: React.ElementType; title: string; description: string; }) {
     return (
         <Link href={href} className="block group">
-            <div className="p-6 rounded-lg border bg-card hover:bg-muted/50 transition-colors h-full flex flex-col justify-between">
+            <div className="p-4 sm:p-6 rounded-lg border bg-card hover:bg-muted/50 transition-colors h-full flex flex-col justify-between">
                 <div>
                     <Icon className="h-7 w-7 text-primary mb-3" />
                     <h3 className="font-semibold text-lg">{title}</h3>

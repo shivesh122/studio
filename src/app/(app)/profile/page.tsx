@@ -254,13 +254,13 @@ export default function ProfilePage() {
                         <CardContent>
                             <div className="space-y-4">
                                 {offeredFields.map((field, index) => (
-                                    <div key={field.id} className="flex items-end gap-2 p-2 border rounded-md bg-secondary/30">
+                                    <div key={field.id} className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 p-2 border rounded-md bg-secondary/30">
                                         <FormField
                                             control={form.control}
                                             name={`skillsOffered.${index}.name`}
                                             render={({ field }) => (
-                                                <FormItem className="flex-grow">
-                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Skill Name</FormLabel>
+                                                <FormItem className="flex-grow w-full">
+                                                    <FormLabel className={cn(index !== 0 && "sm:sr-only")}>Skill Name</FormLabel>
                                                     <FormControl>
                                                         <Input placeholder="e.g. Graphic Design" {...field} />
                                                     </FormControl>
@@ -272,8 +272,8 @@ export default function ProfilePage() {
                                             control={form.control}
                                             name={`skillsOffered.${index}.level`}
                                             render={({ field }) => (
-                                                <FormItem className="w-[150px]">
-                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Level</FormLabel>
+                                                <FormItem className="w-full sm:w-[150px]">
+                                                    <FormLabel className={cn(index !== 0 && "sm:sr-only")}>Level</FormLabel>
                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                         <FormControl>
                                                             <SelectTrigger>
@@ -294,7 +294,7 @@ export default function ProfilePage() {
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive self-end"
                                             onClick={() => removeOffered(index)}
                                         >
                                             <X className="h-4 w-4" />
@@ -324,13 +324,13 @@ export default function ProfilePage() {
                        <CardContent>
                             <div className="space-y-4">
                                 {desiredFields.map((field, index) => (
-                                    <div key={field.id} className="flex items-end gap-2 p-2 border rounded-md bg-secondary/30">
+                                    <div key={field.id} className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 p-2 border rounded-md bg-secondary/30">
                                         <FormField
                                             control={form.control}
                                             name={`skillsDesired.${index}.name`}
                                             render={({ field }) => (
-                                                <FormItem className="flex-grow">
-                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Skill Name</FormLabel>
+                                                <FormItem className="flex-grow w-full">
+                                                    <FormLabel className={cn(index !== 0 && "sm:sr-only")}>Skill Name</FormLabel>
                                                     <FormControl>
                                                         <Input placeholder="e.g. Creative Writing" {...field} />
                                                     </FormControl>
@@ -342,8 +342,8 @@ export default function ProfilePage() {
                                             control={form.control}
                                             name={`skillsDesired.${index}.level`}
                                             render={({ field }) => (
-                                                <FormItem className="w-[150px]">
-                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Level</FormLabel>
+                                                <FormItem className="w-full sm:w-[150px]">
+                                                    <FormLabel className={cn(index !== 0 && "sm:sr-only")}>Level</FormLabel>
                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                         <FormControl>
                                                             <SelectTrigger>
@@ -364,7 +364,7 @@ export default function ProfilePage() {
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive self-end"
                                             onClick={() => removeDesired(index)}
                                         >
                                             <X className="h-4 w-4" />
