@@ -17,16 +17,26 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
+// Define schemas for structured data
+const SkillSchema = z.object({
+  name: z.string(),
+  level: z.enum(['Beginner', 'Intermediate', 'Expert']),
+});
+
+const UserProfileSchema = z.object({
+  name: z.string(),
+  location: z.string(),
+  availability: z.array(z.string()),
+  trustScore: z.number(),
+  skillsOffered: z.array(SkillSchema),
+  skillsDesired: z.array(SkillSchema),
+});
+
+
 // Define the input schema for the flow
 const SuggestSkillMatchesInputSchema = z.object({
-  userProfile: z
-    .string()
-    .describe('The user profile including skills offered and desired.'),
-  desiredSkills: z.string().describe('The skills the user is looking to acquire.'),
-  userLocation: z.string().describe('The location of the user.'),
-  otherUserProfiles: z
-    .array(z.string())
-    .describe('A list of other user profiles in the same location.'),
+  currentUser: UserProfileSchema,
+  otherUsers: z.array(UserProfileSchema),
 });
 export type SuggestSkillMatchesInput = z.infer<typeof SuggestSkillMatchesInputSchema>;
 
@@ -49,20 +59,39 @@ const suggestSkillMatchesPrompt = ai.definePrompt({
   name: 'suggestSkillMatchesPrompt',
   input: {schema: SuggestSkillMatchesInputSchema},
   output: {schema: SuggestSkillMatchesOutputSchema},
-  prompt: `You are an expert at suggesting skill exchange matches between users.
+  prompt: `You are an expert matchmaking algorithm for a skill-swapping platform.
+Your goal is to find the best possible matches for the current user based on a variety of factors.
 
-  Based on the user's profile, desired skills, and location, analyze other user profiles
-  in the same location and suggest potential matches.
+Here is the current user's profile:
+- Name: {{{currentUser.name}}}
+- Location: {{{currentUser.location}}}
+- Availability: {{#each currentUser.availability}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
+- Trust Score: {{{currentUser.trustScore}}}
+- Skills they offer: {{#each currentUser.skillsOffered}}'{{this.name}} ({{this.level}})'{{#unless @last}}, {{/unless}}{{/each}}
+- Skills they want: {{#each currentUser.skillsDesired}}'{{this.name}} ({{this.level}})'{{#unless @last}}, {{/unless}}{{/each}}
 
-  User Profile: {{{userProfile}}}
-  Desired Skills: {{{desiredSkills}}}
-  User Location: {{{userLocation}}}
-  Other User Profiles: {{#each otherUserProfiles}}{{{this}}}\n{{/each}}
+Here are other users on the platform:
+{{#each otherUsers}}
+---
+- Name: {{{this.name}}}
+- Location: {{{this.location}}}
+- Availability: {{#each this.availability}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}
+- Trust Score: {{{this.trustScore}}}
+- Skills they offer: {{#each this.skillsOffered}}'{{this.name}} ({{this.level}})'{{#unless @last}}, {{/unless}}{{/each}}
+- Skills they want: {{#each this.skillsDesired}}'{{this.name}} ({{this.level}})'{{#unless @last}}, {{/unless}}{{/each}}
+{{/each}}
 
-  Consider the skills offered and desired by each user, as well as their location.
-  Provide a list of suggested user profiles that would be a good match for the user.
-  Also, explain your reasoning behind the suggested matches.
-  Return your answer as a JSON object.
+Analyze the profiles to find complementary matches. A good match is someone who offers a skill the current user wants, AND wants a skill the current user offers.
+
+Prioritize matches based on the following criteria, in order of importance:
+1.  **Complementary Skills**: This is the most important factor. There must be a clear skill exchange.
+2.  **Proximity**: Users in the same location are strongly preferred.
+3.  **Trust Score**: Higher trust scores are better. A significantly higher trust score can make a user a more attractive match.
+4.  **Availability**: Users with overlapping availability are better matches.
+
+Based on your analysis, provide a ranked list of the top 3-5 suggested user profiles that would be the best match for the current user. For each suggestion, provide a brief reasoning that explains *why* they are a good match, referencing the criteria above.
+
+Return your answer as a JSON object.
   `,
 });
 

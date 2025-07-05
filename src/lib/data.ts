@@ -16,6 +16,7 @@ export type User = {
     skillsOffered: Skill[];
     skillsDesired: Skill[];
     availability: string[];
+    trustScore: number;
 };
 
 export const users: User[] = [
@@ -37,6 +38,7 @@ export const users: User[] = [
             { name: 'Data Analysis', level: 'Beginner' },
         ],
         availability: ['Weekdays', 'Evenings'],
+        trustScore: 4.8,
     },
     {
         id: 'user-2',
@@ -56,6 +58,7 @@ export const users: User[] = [
             { name: 'SEO Basics', level: 'Beginner' },
         ],
         availability: ['Weekends'],
+        trustScore: 4.5,
     },
     {
         id: 'user-3',
@@ -75,6 +78,7 @@ export const users: User[] = [
             { name: 'Python', level: 'Beginner' },
         ],
         availability: ['Evenings'],
+        trustScore: 4.2,
     },
     {
         id: 'user-4',
@@ -94,6 +98,7 @@ export const users: User[] = [
             { name: 'Web Development', level: 'Beginner' },
         ],
         availability: ['Weekends', 'Mornings'],
+        trustScore: 4.9,
     },
     {
         id: 'user-5',
@@ -112,6 +117,7 @@ export const users: User[] = [
             { name: 'Social Media Marketing', level: 'Intermediate' },
         ],
         availability: ['Weekdays', 'Weekends'],
+        trustScore: 4.0,
     },
     {
         id: 'user-6',
@@ -131,6 +137,7 @@ export const users: User[] = [
             { name: 'Photography', level: 'Intermediate' },
         ],
         availability: ['Afternoons'],
+        trustScore: 4.7,
     },
     {
         id: 'user-7',
@@ -150,6 +157,7 @@ export const users: User[] = [
             { name: 'Meditation', level: 'Beginner' },
         ],
         availability: ['Evenings'],
+        trustScore: 3.8,
     },
      {
         id: 'user-8',
@@ -169,6 +177,7 @@ export const users: User[] = [
             { name: 'Public Speaking', level: 'Intermediate' },
         ],
         availability: ['Mornings', 'Evenings'],
+        trustScore: 4.9,
     },
 ];
 
