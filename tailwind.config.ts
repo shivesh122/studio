@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['Poppins', 'sans-serif'],
-        headline: ['Poppins', 'sans-serif'],
+        body: ['"Exo 2"', 'sans-serif'],
+        headline: ['"Exo 2"', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

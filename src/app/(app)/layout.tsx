@@ -26,10 +26,10 @@ export default function AppLayout({
         <Sidebar>
           <SidebarHeader>
             <Link href="/dashboard" className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7 text-blue-600">
-                  <path d="M10.28 4.71C8.35 2.77 5.25 2.77 3.32 4.71c-1.94 1.94-1.94 5.04 0 6.97 1.93 1.94 5.03 1.94 6.96 0"/>
-                  <path d="m11.7 12.33 7.8 7.8"/>
-                  <path d="M20.68 3.32c1.94 1.94 1.94 5.04 0 6.97-1.94 1.94-5.04 1.94-6.97 0"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7 text-primary">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
               </svg>
               <h1 className="font-semibold text-xl font-headline">SkillSwap Pods</h1>
             </Link>
