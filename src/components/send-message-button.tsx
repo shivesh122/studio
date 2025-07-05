@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useEffect, useState, useRef, useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +10,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -42,7 +41,7 @@ function SubmitButton() {
 }
 
 export default function SendMessageButton({ user }: { user: User }) {
-    const [state, dispatch] = useFormState(sendMessage, initialState);
+    const [state, dispatch] = useActionState(sendMessage, initialState);
     const [open, setOpen] = useState(false);
     const { toast } = useToast();
     const formRef = useRef<HTMLFormElement>(null);
@@ -63,7 +62,7 @@ export default function SendMessageButton({ user }: { user: User }) {
         }
     }, [state, toast, user.name]);
 
-    // When dialog closes, reset the form. This doesn't reset the `state` from useFormState.
+    // When dialog closes, reset the form. This doesn't reset the `state` from useActionState.
     // That will reset on the next successful submission.
     useEffect(() => {
         if (!open) {
