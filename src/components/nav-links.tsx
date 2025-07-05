@@ -1,3 +1,4 @@
+
 // src/components/nav-links.tsx
 "use client"
 
@@ -10,7 +11,7 @@ import Link from 'next/link'
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
   { href: '/members', icon: Users, label: 'Find Members' },
-  { href: '/messages', icon: MessageSquare, label: 'Messages', badge: '3' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages' },
   { href: '/profile', icon: UserIcon, label: 'My Profile' },
 ]
 
