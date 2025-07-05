@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input"
 import UserCard from "@/components/user-card"
 import { getOtherUsers } from "@/lib/data"
 import { Search } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 
 export default function MembersPage() {
   const otherUsers = getOtherUsers()
@@ -16,10 +18,36 @@ export default function MembersPage() {
 
       <Card>
         <CardHeader>
-           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search by name or skill..." className="w-full pl-9 md:w-96" />
-          </div>
+            <div className="flex flex-col md:flex-row gap-4">
+               <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search by name or skill..." className="w-full pl-9" />
+              </div>
+              <div className="flex gap-4">
+                <Select>
+                  <SelectTrigger className="w-full md:w-[180px]">
+                    <SelectValue placeholder="Filter by availability" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="weekdays">Weekdays</SelectItem>
+                    <SelectItem value="weekends">Weekends</SelectItem>
+                    <SelectItem value="mornings">Mornings</SelectItem>
+                    <SelectItem value="afternoons">Afternoons</SelectItem>
+                    <SelectItem value="evenings">Evenings</SelectItem>
+                  </SelectContent>
+                </Select>
+                 <Select>
+                  <SelectTrigger className="w-full md:w-[180px]">
+                    <SelectValue placeholder="Filter by skill level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beginner">Beginner</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="expert">Expert</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
         </CardHeader>
         <CardContent className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
            {otherUsers.map(user => (

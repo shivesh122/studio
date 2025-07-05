@@ -1,4 +1,3 @@
-// src/ai/flows/suggest-skill-matches.ts
 'use server';
 
 /**
@@ -10,8 +9,8 @@
  *
  * @exports {
  *   suggestSkillMatches: (input: SuggestSkillMatchesInput) => Promise<SuggestSkillMatchesOutput>;
- *   SuggestSkillMatchesInput: The input type for the suggestSkillMatches function.
- *   SuggestSkillMatchesOutput: The return type for the suggestSkillMatches function.
+ *   SuggestSkillMatchesInput: The new input type for the suggestSkillMatches function.
+ *   SuggestSkillMatchesOutput: The new return type for the suggestSkillMatches function.
  * }
  */
 
