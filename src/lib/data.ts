@@ -5,6 +5,17 @@ export type Skill = {
     level: 'Beginner' | 'Intermediate' | 'Expert';
 };
 
+export type Review = {
+    id: string;
+    authorId: string;
+    authorName: string;
+    authorAvatarUrl: string;
+    authorAiHint?: string;
+    rating: number;
+    comment: string;
+    date: string;
+};
+
 export type User = {
     id: string;
     name: string;
@@ -17,6 +28,7 @@ export type User = {
     skillsDesired: Skill[];
     availability: string[];
     trustScore: number;
+    reviews: Review[];
 };
 
 export const users: User[] = [
@@ -39,6 +51,28 @@ export const users: User[] = [
         ],
         availability: ['Weekdays', 'Evenings'],
         trustScore: 4.8,
+        reviews: [
+            {
+                id: 'review-1',
+                authorId: 'user-2',
+                authorName: 'Jane Smith',
+                authorAvatarUrl: 'https://placehold.co/300x300.png',
+                authorAiHint: 'woman writing',
+                rating: 5,
+                comment: "Alex was an amazing teacher! I learned so much about web development in just a few sessions. Highly recommend!",
+                date: '2 days ago'
+            },
+            {
+                id: 'review-2',
+                authorId: 'user-3',
+                authorName: 'Bob Johnson',
+                authorAvatarUrl: 'https://placehold.co/300x300.png',
+                authorAiHint: 'man with charts',
+                rating: 4.5,
+                comment: "Very knowledgeable and patient. Helped me with some complex graphic design tasks. Would definitely trade skills again.",
+                date: '1 week ago'
+            }
+        ],
     },
     {
         id: 'user-2',
@@ -59,6 +93,18 @@ export const users: User[] = [
         ],
         availability: ['Weekends'],
         trustScore: 4.5,
+        reviews: [
+             {
+                id: 'review-3',
+                authorId: 'user-1',
+                authorName: 'Alex Doe',
+                authorAvatarUrl: 'https://placehold.co/300x300.png',
+                authorAiHint: 'woman programming',
+                rating: 4,
+                comment: "Jane's writing advice was invaluable. She helped me structure my blog posts much more effectively.",
+                date: '3 days ago'
+            }
+        ],
     },
     {
         id: 'user-3',
@@ -79,6 +125,7 @@ export const users: User[] = [
         ],
         availability: ['Evenings'],
         trustScore: 4.2,
+        reviews: [],
     },
     {
         id: 'user-4',
@@ -99,6 +146,18 @@ export const users: User[] = [
         ],
         availability: ['Weekends', 'Mornings'],
         trustScore: 4.9,
+        reviews: [
+            {
+                id: 'review-4',
+                authorId: 'user-6',
+                authorName: 'Diana Prince',
+                authorAvatarUrl: 'https://placehold.co/300x300.png',
+                authorAiHint: 'woman sculpting',
+                rating: 5,
+                comment: "Alice's yoga classes are transformative. She has a wonderful energy and is a very skilled instructor.",
+                date: '1 month ago'
+            },
+        ],
     },
     {
         id: 'user-5',
@@ -118,6 +177,7 @@ export const users: User[] = [
         ],
         availability: ['Weekdays', 'Weekends'],
         trustScore: 4.0,
+        reviews: [],
     },
     {
         id: 'user-6',
@@ -138,6 +198,7 @@ export const users: User[] = [
         ],
         availability: ['Afternoons'],
         trustScore: 4.7,
+        reviews: [],
     },
     {
         id: 'user-7',
@@ -158,6 +219,7 @@ export const users: User[] = [
         ],
         availability: ['Evenings'],
         trustScore: 3.8,
+        reviews: [],
     },
      {
         id: 'user-8',
@@ -178,6 +240,7 @@ export const users: User[] = [
         ],
         availability: ['Mornings', 'Evenings'],
         trustScore: 4.9,
+        reviews: [],
     },
 ];
 

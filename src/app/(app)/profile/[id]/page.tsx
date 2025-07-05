@@ -2,10 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getUserById, users } from "@/lib/data";
-import { Mail, MapPin, CalendarDays } from "lucide-react";
+import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import SendMessageButton from "@/components/send-message-button";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import ReviewCard from "@/components/review-card";
 
 export function generateStaticParams() {
   return users.map((user) => ({
@@ -20,11 +23,13 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
         notFound();
     }
 
+    const totalReviews = user.reviews.length;
+
     return (
         <div className="space-y-6">
             <Card className="overflow-hidden">
                 <div className="relative h-48 w-full bg-muted">
-                    <Image src="https://placehold.co/1200x400.png" alt="Profile banner" fill style={{objectFit: "cover"}} data-ai-hint="abstract pattern" />
+                    <Image src="https://placehold.co/1200x400.png" alt="Profile banner" style={{objectFit: "cover"}} className="object-cover" data-ai-hint="abstract pattern" />
                 </div>
                 <CardContent className="relative flex flex-col md:flex-row gap-6 p-6">
                     <div className="-mt-20 md:-mt-24">
@@ -48,37 +53,88 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                 </CardContent>
             </Card>
 
-            <div className="grid md:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Skills Offered</CardTitle>
-                        <CardDescription>Skills {user.name.split(' ')[0]} can share with the community.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                         <div className="flex flex-wrap gap-2">
-                            {user.skillsOffered.map(skill => (
-                                <Badge key={skill.name} variant="secondary" className="text-base py-1 px-3">
-                                    {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
-                                </Badge>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Skills Wanted</CardTitle>
-                        <CardDescription>Skills {user.name.split(' ')[0]} is interested in learning.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                         <div className="flex flex-wrap gap-2">
-                            {user.skillsDesired.map(skill => (
-                                <Badge key={skill.name} variant="outline" className="text-base py-1 px-3">
-                                   {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
-                                </Badge>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="grid lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Skills Offered</CardTitle>
+                            <CardDescription>Skills {user.name.split(' ')[0]} can share with the community.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                             <div className="flex flex-wrap gap-2">
+                                {user.skillsOffered.map(skill => (
+                                    <Badge key={skill.name} variant="secondary" className="text-base py-1 px-3">
+                                        {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
+                                    </Badge>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Skills Wanted</CardTitle>
+                            <CardDescription>Skills {user.name.split(' ')[0]} is interested in learning.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                             <div className="flex flex-wrap gap-2">
+                                {user.skillsDesired.map(skill => (
+                                    <Badge key={skill.name} variant="outline" className="text-base py-1 px-3">
+                                       {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
+                                    </Badge>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <CardTitle>Ratings & Reviews</CardTitle>
+                                    <CardDescription>What others are saying about {user.name.split(' ')[0]}.</CardDescription>
+                                </div>
+                                <Button variant="outline"><MessageCircle className="mr-2" /> Leave Review</Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="divide-y">
+                            {totalReviews > 0 ? (
+                                user.reviews.map((review) => (
+                                    <ReviewCard key={review.id} review={review} />
+                                ))
+                            ) : (
+                                <div className="text-center text-muted-foreground py-12">
+                                    <p>No reviews yet.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div className="lg:col-span-1">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Trust Score</CardTitle>
+                            <CardDescription>A measure of reputation on the platform.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center justify-center gap-2">
+                                <p className="text-5xl font-bold">{user.trustScore.toFixed(1)}</p>
+                                <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" />
+                            </div>
+                            <Separator />
+                            <ul className="space-y-3 text-sm text-muted-foreground">
+                                <li className="flex items-center gap-3">
+                                    <ShieldCheck className="h-5 w-5 text-primary" />
+                                    <span>Email Verified</span>
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <Star className="h-5 w-5 text-primary" />
+                                    <span>{totalReviews} {totalReviews === 1 ? 'Review' : 'Reviews'}</span>
+                                </li>
+                            </ul>
+                            <Button variant="secondary" className="w-full">Dispute Resolution</Button>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     )
