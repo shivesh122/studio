@@ -18,23 +18,12 @@ import { Home, Users, MessageSquare, User as UserIcon, Bot, Edit, ExternalLink }
 import Header from '@/components/header'
 import AiSuggestions from '@/components/ai-suggestions'
 import Image from 'next/image'
-
-const currentUser = {
-  name: 'Alex Doe',
-  avatarUrl: 'https://placehold.co/100x100.png',
-  location: 'Greenwood',
-  skillsOffered: ['Web Development', 'Graphic Design', 'Photography'],
-  skillsDesired: ['Creative Writing', 'Data Analysis', 'Public Speaking'],
-};
-
-const otherUsers = [
-  { id: '1', name: 'Jane Smith', avatarUrl: 'https://placehold.co/100x100.png', dataAiHint: 'person portrait', location: 'Greenwood', skillsOffered: ['Creative Writing', 'Marketing'], skillsDesired: ['Web Development'] },
-  { id: '2', name: 'Bob Johnson', avatarUrl: 'https://placehold.co/100x100.png', dataAiHint: 'person portrait', location: 'Greenwood', skillsOffered: ['Data Analysis', 'Project Management'], skillsDesired: ['Graphic Design'] },
-  { id: '3', name: 'Alice Williams', avatarUrl: 'https://placehold.co/100x100.png', dataAiHint: 'person portrait', location: 'Greenwood', skillsOffered: ['Gardening', 'Cooking', 'Yoga Instruction'], skillsDesired: ['Photography', 'Web Development'] },
-  { id: '4', name: 'Charlie Brown', avatarUrl: 'https://placehold.co/100x100.png', dataAiHint: 'person portrait', location: 'Greenwood', skillsOffered: ['Public Speaking', 'Event Planning'], skillsDesired: ['Graphic Design'] },
-];
+import { getCurrentUser, getOtherUsers } from '@/lib/data'
 
 export default function DashboardPage() {
+  const currentUser = getCurrentUser();
+  const otherUsers = getOtherUsers();
+
   return (
     <div className="bg-background min-h-screen">
       <SidebarProvider>
@@ -80,7 +69,7 @@ export default function DashboardPage() {
             <Separator className="my-2" />
             <div className="flex items-center gap-3 p-2">
                 <Avatar className="h-9 w-9">
-                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint="person portrait" />
+                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint={currentUser.dataAiHint} />
                     <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>

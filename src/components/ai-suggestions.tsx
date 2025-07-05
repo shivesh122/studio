@@ -7,13 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, Bot, Sparkles } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-
-type User = {
-  name: string;
-  skillsOffered: string[];
-  skillsDesired: string[];
-  location: string;
-}
+import type { User } from '@/lib/data'
 
 type Props = {
   currentUser: User;
