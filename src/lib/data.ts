@@ -1,4 +1,3 @@
-
 // src/lib/data.ts
 
 export type Skill = {
@@ -27,6 +26,15 @@ export type Pod = {
     tags: string[];
 }
 
+export type PodEvent = {
+    id: string;
+    podId: string;
+    title: string;
+    description: string;
+    date: Date;
+    createdBy: string; // user id
+};
+
 export type User = {
     id: string;
     name: string;
@@ -48,6 +56,33 @@ export type User = {
     };
     pods: string[];
 };
+
+export const podEvents: PodEvent[] = [
+    {
+        id: 'event-1',
+        podId: 'pod-1',
+        title: 'Seed Swap & Planting Day',
+        description: 'Bring your extra seeds and seedlings to swap with fellow gardeners! We\'ll also spend some time planting in the community garden beds.',
+        date: new Date(new Date().setDate(new Date().getDate() + 7)), // A week from now
+        createdBy: 'user-4',
+    },
+    {
+        id: 'event-2',
+        podId: 'pod-2',
+        title: 'Component Library Show & Tell',
+        description: 'Let\'s share our favorite React component libraries and discuss the pros and cons. Bring your latest project to show off!',
+        date: new Date(new Date().setDate(new Date().getDate() + 10)), // 10 days from now
+        createdBy: 'user-1',
+    },
+    {
+        id: 'event-3',
+        podId: 'pod-2',
+        title: 'Monthly Coding Challenge Kick-off',
+        description: 'Join us as we kick off this month\'s coding challenge: building a weather app! We\'ll brainstorm ideas and form teams.',
+        date: new Date(new Date().setDate(new Date().getDate() + 14)), // Two weeks from now
+        createdBy: 'user-2',
+    }
+];
 
 export const pods: Pod[] = [
     {
@@ -348,11 +383,13 @@ export const users: User[] = [
     },
 ];
 
-// --- NEW DATA FUNCTIONS ---
+// --- DATA FUNCTIONS ---
 export const getPods = (): Pod[] => pods;
 export const getPodById = (id: string): Pod | undefined => pods.find(pod => pod.id === id);
 export const getUsersByIds = (ids: string[]): User[] => users.filter(user => ids.includes(user.id));
-// --- END NEW DATA FUNCTIONS ---
+export const getPodEvents = (podId: string): PodEvent[] => {
+    return podEvents.filter(event => event.podId === podId).sort((a, b) => a.date.getTime() - b.date.getTime());
+};
 
 export const getCurrentUser = (): User => users[0];
 
