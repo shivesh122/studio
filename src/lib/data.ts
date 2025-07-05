@@ -5,6 +5,21 @@ export type Skill = {
     level: 'Beginner' | 'Intermediate' | 'Expert';
 };
 
+export type Badge = {
+    id: string;
+    name: string;
+    description: string;
+    icon: 'Star' | 'Sparkles' | 'Trophy' | 'Users' | 'Award';
+};
+
+export const allBadges: Badge[] = [
+    { id: 'badge-1', name: 'First Swap', description: 'Completed your first skill exchange.', icon: 'Star' },
+    { id: 'badge-2', name: 'Community Helper', description: 'Completed 5 skill exchanges.', icon: 'Sparkles' },
+    { id: 'badge-3', name: 'Pod Pioneer', description: 'Joined your first Community Pod.', icon: 'Users' },
+    { id: 'badge-4', name: 'Top Performer', description: 'Reached the top of a pod leaderboard.', icon: 'Trophy' },
+    { id: 'badge-5', name: 'Verified Member', description: 'Verified your email, mobile, and ID.', icon: 'Award' },
+];
+
 export type Review = {
     id: string;
     authorId: string;
@@ -55,6 +70,9 @@ export type User = {
         id: boolean;
     };
     pods: string[];
+    xp: number;
+    level: number;
+    badges: Badge[];
 };
 
 export const podEvents: PodEvent[] = [
@@ -157,12 +175,11 @@ export const users: User[] = [
                 date: '1 week ago'
             }
         ],
-        verifications: {
-            email: true,
-            mobile: true,
-            id: false,
-        },
+        verifications: { email: true, mobile: true, id: false },
         pods: ['pod-1', 'pod-2'],
+        xp: 275,
+        level: 3,
+        badges: [allBadges[0], allBadges[2]],
     },
     {
         id: 'user-2',
@@ -196,12 +213,11 @@ export const users: User[] = [
                 date: '3 days ago'
             }
         ],
-        verifications: {
-            email: true,
-            mobile: false,
-            id: false,
-        },
+        verifications: { email: true, mobile: false, id: false },
         pods: ['pod-2', 'pod-3'],
+        xp: 150,
+        level: 2,
+        badges: [allBadges[0], allBadges[2]],
     },
     {
         id: 'user-3',
@@ -224,12 +240,11 @@ export const users: User[] = [
         availability: ['Evenings'],
         trustScore: 4.2,
         reviews: [],
-        verifications: {
-            email: true,
-            mobile: true,
-            id: false,
-        },
+        verifications: { email: true, mobile: true, id: false },
         pods: ['pod-2'],
+        xp: 80,
+        level: 1,
+        badges: [allBadges[2]],
     },
     {
         id: 'user-4',
@@ -263,12 +278,11 @@ export const users: User[] = [
                 date: '1 month ago'
             },
         ],
-        verifications: {
-            email: true,
-            mobile: true,
-            id: true,
-        },
+        verifications: { email: true, mobile: true, id: true },
         pods: ['pod-1'],
+        xp: 320,
+        level: 4,
+        badges: [allBadges[0], allBadges[1], allBadges[2], allBadges[4]],
     },
     {
         id: 'user-5',
@@ -290,12 +304,11 @@ export const users: User[] = [
         availability: ['Weekdays', 'Weekends'],
         trustScore: 4.0,
         reviews: [],
-        verifications: {
-            email: true,
-            mobile: false,
-            id: false,
-        },
+        verifications: { email: true, mobile: false, id: false },
         pods: ['pod-3'],
+        xp: 50,
+        level: 1,
+        badges: [allBadges[2]],
     },
     {
         id: 'user-6',
@@ -318,12 +331,11 @@ export const users: User[] = [
         availability: ['Afternoons'],
         trustScore: 4.7,
         reviews: [],
-        verifications: {
-            email: true,
-            mobile: true,
-            id: true,
-        },
+        verifications: { email: true, mobile: true, id: true },
         pods: ['pod-1', 'pod-3'],
+        xp: 410,
+        level: 5,
+        badges: [allBadges[0], allBadges[2], allBadges[4]],
     },
     {
         id: 'user-7',
@@ -346,12 +358,11 @@ export const users: User[] = [
         availability: ['Evenings'],
         trustScore: 3.8,
         reviews: [],
-        verifications: {
-            email: true,
-            mobile: false,
-            id: false,
-        },
+        verifications: { email: true, mobile: false, id: false },
         pods: ['pod-2'],
+        xp: 95,
+        level: 1,
+        badges: [allBadges[2]],
     },
      {
         id: 'user-8',
@@ -374,12 +385,11 @@ export const users: User[] = [
         availability: ['Mornings', 'Evenings'],
         trustScore: 4.9,
         reviews: [],
-        verifications: {
-            email: true,
-            mobile: true,
-            id: false,
-        },
+        verifications: { email: true, mobile: true, id: false },
         pods: ['pod-2'],
+        xp: 110,
+        level: 2,
+        badges: [allBadges[2]],
     },
 ];
 

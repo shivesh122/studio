@@ -3,16 +3,31 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCurrentUser, getUserById } from "@/lib/data";
-import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck, Shield } from "lucide-react";
+import { getCurrentUser, getUserById, type Badge as BadgeType } from "@/lib/data";
+import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck, Shield, Award, Sparkles, Trophy, Users } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import SendMessageButton from "@/components/send-message-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import ReviewCard from "@/components/review-card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const badgeIcons: Record<BadgeType['icon'], React.ElementType> = {
+    Star: Star,
+    Sparkles: Sparkles,
+    Trophy: Trophy,
+    Users: Users,
+    Award: Award,
+};
+
+const BadgeIcon: FC<{ iconName: BadgeType['icon'], className?: string }> = ({ iconName, className }) => {
+    const Icon = badgeIcons[iconName];
+    return Icon ? <Icon className={className} /> : null;
+};
 
 export default function UserProfilePage({ params }: { params: { id: string } }) {
     const user = getUserById(params.id);
@@ -40,6 +55,11 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
     }
 
     const totalReviews = user.reviews.length;
+    const xpForNextLevel = user.level * 150;
+    const xpForCurrentLevel = (user.level - 1) * 150;
+    const currentLevelXp = user.xp - xpForCurrentLevel;
+    const progress = (currentLevelXp / (xpForNextLevel - xpForCurrentLevel)) * 100;
+
 
     return (
         <div className="space-y-6">
@@ -125,7 +145,56 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                     </Card>
                 </div>
 
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Gamification Stats</CardTitle>
+                             <CardDescription>Reputation and progress on the platform.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <div className="flex justify-between items-baseline">
+                                     <p className="font-semibold">Level {user.level}</p>
+                                     <p className="text-sm text-muted-foreground">{user.xp} XP</p>
+                                </div>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger className="w-full">
+                                            <Progress value={progress} />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>{xpForNextLevel - user.xp} XP to next level</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+                             <Separator />
+                             <div>
+                                <h4 className="font-semibold text-sm mb-3">Badges</h4>
+                                {user.badges.length > 0 ? (
+                                     <TooltipProvider>
+                                        <div className="flex flex-wrap gap-4">
+                                            {user.badges.map(badge => (
+                                                <Tooltip key={badge.id}>
+                                                    <TooltipTrigger className="flex flex-col items-center gap-1.5 text-center">
+                                                        <div className="p-2.5 rounded-full bg-secondary">
+                                                          <BadgeIcon iconName={badge.icon} className="h-5 w-5 text-secondary-foreground" />
+                                                        </div>
+                                                        <span className="text-xs font-medium w-16 truncate">{badge.name}</span>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>{badge.description}</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            ))}
+                                        </div>
+                                    </TooltipProvider>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">No badges earned yet.</p>
+                                )}
+                             </div>
+                        </CardContent>
+                    </Card>
                     <Card>
                         <CardHeader>
                             <CardTitle>Trust & Verification</CardTitle>

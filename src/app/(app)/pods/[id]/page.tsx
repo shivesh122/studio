@@ -1,13 +1,13 @@
 'use client';
 
-import { getPodById, getUsersByIds, getUserById, getCurrentUser, getPodEvents, type Pod, type PodEvent } from '@/lib/data';
+import { getPodById, getUsersByIds, getUserById, getCurrentUser, getPodEvents, type Pod, type PodEvent, type User } from '@/lib/data';
 import { getPodMessages, addPodMessage, type PodMessage } from '@/lib/messages';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Hash, Users, MessageSquare, Calendar, Settings, Camera, PlusCircle, Send, PartyPopper } from 'lucide-react';
+import { Hash, Users, MessageSquare, Calendar, Settings, Camera, PlusCircle, Send, PartyPopper, BarChart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { format, formatDistanceToNow } from 'date-fns';
+import PodLeaderboard from '@/components/pod-leaderboard';
 
 export default function PodDetailPage({ params }: { params: { id: string } }) {
     // These are safe to call on client as they are just reading from a file
@@ -28,6 +29,7 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
     const [messages, setMessages] = useState<PodMessage[]>([]);
     const [events, setEvents] = useState<PodEvent[]>([]);
     const [newMessage, setNewMessage] = useState('');
+    const [members, setMembers] = useState<User[]>([]);
     
     // Refs
     const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +44,7 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
         }
         setMessages(getPodMessages(pod.id));
         setEvents(getPodEvents(pod.id));
+        setMembers(getUsersByIds(pod.members));
     }, [pod]);
     
     // Auto-scroll for chat
@@ -53,7 +56,6 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
         notFound();
     }
 
-    const members = getUsersByIds(pod.members);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -122,6 +124,7 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
                         <TabsTrigger value="chat"><MessageSquare className="mr-2 h-4 w-4" /> Chat</TabsTrigger>
                         <TabsTrigger value="members"><Users className="mr-2 h-4 w-4" /> Members</TabsTrigger>
                         <TabsTrigger value="events"><Calendar className="mr-2 h-4 w-4" /> Events</TabsTrigger>
+                        <TabsTrigger value="leaderboard"><BarChart className="mr-2 h-4 w-4" /> Leaderboard</TabsTrigger>
                     </TabsList>
                      <Button variant="outline"><Settings className="mr-2 h-4 w-4"/> Pod Settings</Button>
                 </div>
@@ -257,6 +260,9 @@ export default function PodDetailPage({ params }: { params: { id: string } }) {
                             )}
                         </CardContent>
                     </Card>
+                </TabsContent>
+                <TabsContent value="leaderboard" className="mt-4">
+                    <PodLeaderboard members={members} />
                 </TabsContent>
             </Tabs>
         </div>
