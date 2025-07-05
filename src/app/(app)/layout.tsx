@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   SidebarProvider,
   Sidebar,
@@ -5,18 +9,33 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarInset,
-} from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
-import Header from '@/components/header'
-import NavLinks from '@/components/nav-links'
-import Link from 'next/link'
-import SidebarUserProfile from '@/components/sidebar-user-profile'
+} from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
+import Header from '@/components/header';
+import NavLinks from '@/components/nav-links';
+import Link from 'next/link';
+import SidebarUserProfile from '@/components/sidebar-user-profile';
 
 export default function AppLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const [isVerified, setIsVerified] = useState(false);
+
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      router.push('/login');
+    } else {
+      setIsVerified(true);
+    }
+  }, [router]);
+
+  if (!isVerified) {
+    return null; // Or a loading spinner to prevent flash of content
+  }
 
   return (
     <div className="bg-background min-h-screen">
@@ -50,5 +69,5 @@ export default function AppLayout({
         </SidebarInset>
       </SidebarProvider>
     </div>
-  )
+  );
 }

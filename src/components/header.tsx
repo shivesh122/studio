@@ -9,6 +9,7 @@ import { Search, LogOut, User, Settings } from 'lucide-react'
 import { getCurrentUser } from '@/lib/data'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Header() {
   return (
@@ -27,6 +28,7 @@ function UserMenu() {
   const currentUser = getCurrentUser();
   const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl);
   const fallback = currentUser.name.split(' ').map(n => n[0]).join('');
+  const router = useRouter();
 
   useEffect(() => {
     const savedAvatar = localStorage.getItem('user_avatar_url');
@@ -48,6 +50,11 @@ function UserMenu() {
         window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    router.push('/login');
+  };
 
   return (
     <DropdownMenu>
@@ -80,7 +87,7 @@ function UserMenu() {
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
