@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -116,7 +117,7 @@ export default function PricingPage() {
                         key={index} 
                         className={cn(
                             "flex flex-col",
-                            plan.isFeatured && "border-primary border-2 shadow-lg scale-105"
+                            plan.isFeatured && "border-primary border-2 shadow-lg md:scale-105"
                         )}
                     >
                         <CardHeader className="text-center pt-8">
