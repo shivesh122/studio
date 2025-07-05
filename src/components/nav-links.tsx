@@ -1,0 +1,35 @@
+// src/components/nav-links.tsx
+"use client"
+
+import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
+import { Badge } from '@/components/ui/badge'
+import { Home, Users, MessageSquare, User as UserIcon } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
+const navItems = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/members', icon: Users, label: 'Find Members' },
+  { href: '/messages', icon: MessageSquare, label: 'Messages', badge: '3' },
+  { href: '/profile', icon: UserIcon, label: 'My Profile' },
+]
+
+export default function NavLinks() {
+  const pathname = usePathname();
+
+  return (
+    <SidebarMenu>
+      {navItems.map((item) => (
+        <SidebarMenuItem key={item.href}>
+          <Link href={item.href} passHref>
+            <SidebarMenuButton isActive={pathname.startsWith(item.href)}>
+              <item.icon />
+              {item.label}
+              {item.badge && <Badge className="ml-auto">{item.badge}</Badge>}
+            </SidebarMenuButton>
+          </Link>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
+}
