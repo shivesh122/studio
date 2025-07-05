@@ -13,7 +13,7 @@ export default function ProfilePage() {
         <div className="space-y-6">
             <Card className="overflow-hidden">
                 <div className="relative h-48 w-full bg-muted">
-                    <Image src="https://placehold.co/1200x400.png" alt="Profile banner" className="h-full w-full object-cover" layout="fill" data-ai-hint="abstract texture" />
+                    <Image src="https://placehold.co/1200x400.png" alt="Profile banner" fill style={{objectFit: "cover"}} data-ai-hint="abstract texture" />
                 </div>
                 <CardContent className="relative flex flex-col md:flex-row gap-6 p-6">
                     <div className="-mt-20 md:-mt-24">
