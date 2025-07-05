@@ -4,7 +4,7 @@
 
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
-import { LayoutDashboard, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact } from 'lucide-react'
+import { LayoutDashboard, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact, Gem } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/messages', icon: MessageSquare, label: 'Messages' },
   { href: '/video-chat', icon: Video, label: 'Video Chat' },
   { href: '/profile', icon: UserIcon, label: 'My Profile' },
+  { href: '/pricing', icon: Gem, label: 'Upgrade to Pro', isPro: true },
 ]
 
 export default function NavLinks() {
@@ -26,7 +27,10 @@ export default function NavLinks() {
       {navItems.map((item) => (
         <SidebarMenuItem key={item.href}>
           <Link href={item.href} passHref>
-            <SidebarMenuButton isActive={pathname.startsWith(item.href) && (item.href !== '/profile' || pathname === '/profile')}>
+            <SidebarMenuButton 
+                isActive={pathname.startsWith(item.href) && (item.href !== '/profile' || pathname === '/profile')}
+                className={item.isPro ? 'mt-4 text-primary bg-primary/5 hover:bg-primary/10 hover:text-primary' : ''}
+              >
               <item.icon />
               {item.label}
               {item.badge && <Badge className="ml-auto">{item.badge}</Badge>}
