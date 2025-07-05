@@ -1,22 +1,29 @@
 'use client'
 
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { getCurrentUser } from "@/lib/data";
-import { Save } from "lucide-react";
+import { Save, PlusCircle, X } from "lucide-react";
 import Image from "next/image";
+import { cn } from '@/lib/utils';
 
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekends', 'Mornings', 'Afternoons', 'Evenings'] as const;
+const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Expert'] as const;
+
+const skillSchema = z.object({
+  name: z.string().min(1, "Skill name cannot be empty."),
+  level: z.enum(SKILL_LEVELS),
+});
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -26,6 +33,8 @@ const profileFormSchema = z.object({
   availability: z.array(z.string()).refine(value => value.some(item => item), {
     message: "You have to select at least one availability option.",
   }),
+  skillsOffered: z.array(skillSchema).max(10, "You can add a maximum of 10 skills."),
+  skillsDesired: z.array(skillSchema).max(10, "You can add a maximum of 10 skills."),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -42,8 +51,21 @@ export default function ProfilePage() {
             location: user.location,
             bio: user.bio,
             availability: user.availability,
+            skillsOffered: user.skillsOffered,
+            skillsDesired: user.skillsDesired,
         },
     });
+
+    const { fields: offeredFields, append: appendOffered, remove: removeOffered } = useFieldArray({
+        control: form.control,
+        name: "skillsOffered"
+    });
+
+    const { fields: desiredFields, append: appendDesired, remove: removeDesired } = useFieldArray({
+        control: form.control,
+        name: "skillsDesired"
+    });
+
 
     function onSubmit(data: ProfileFormValues) {
         // In a real application, you would send this data to your backend to update the user's profile.
@@ -105,7 +127,7 @@ export default function ProfilePage() {
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
-                                                <Input placeholder="Your Email" type="email" {...field} className="h-auto p-0 border-0 bg-transparent" />
+                                                <Input placeholder="Your Email" type="email" {...field} className="h-auto p-0 border-0 bg-transparent" readOnly />
                                             </FormControl>
                                              <FormMessage />
                                         </FormItem>
@@ -129,38 +151,148 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                <div className="grid md:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Skills I Offer</CardTitle>
-                            <CardDescription>These are the skills I can share.</CardDescription>
+                            <CardDescription>Manage the skills you can share.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {user.skillsOffered.map(skill => (
-                                     <Badge key={skill.name} variant="secondary" className="text-base py-1 px-3">
-                                        {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
-                                    </Badge>
+                            <div className="space-y-4">
+                                {offeredFields.map((field, index) => (
+                                    <div key={field.id} className="flex items-end gap-2 p-2 border rounded-md bg-secondary/30">
+                                        <FormField
+                                            control={form.control}
+                                            name={`skillsOffered.${index}.name`}
+                                            render={({ field }) => (
+                                                <FormItem className="flex-grow">
+                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Skill Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="e.g. Graphic Design" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`skillsOffered.${index}.level`}
+                                            render={({ field }) => (
+                                                <FormItem className="w-[150px]">
+                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Level</FormLabel>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select level" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {SKILL_LEVELS.map(level => (
+                                                                <SelectItem key={level} value={level}>{level}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                                            onClick={() => removeOffered(index)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                            <span className="sr-only">Remove skill</span>
+                                        </Button>
+                                    </div>
                                 ))}
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => appendOffered({ name: '', level: 'Beginner' })}
+                                >
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Add Skill
+                                </Button>
+                                <FormMessage>{form.formState.errors.skillsOffered?.message}</FormMessage>
                             </div>
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader>
                             <CardTitle>Skills I Want</CardTitle>
-                            <CardDescription>These are skills I want to learn.</CardDescription>
+                            <CardDescription>Manage skills you want to learn.</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-wrap gap-2">
-                                {user.skillsDesired.map(skill => (
-                                    <Badge key={skill.name} variant="outline" className="text-base py-1 px-3">
-                                       {skill.name} <span className="ml-1.5 font-normal opacity-75">({skill.level})</span>
-                                    </Badge>
+                       <CardContent>
+                            <div className="space-y-4">
+                                {desiredFields.map((field, index) => (
+                                    <div key={field.id} className="flex items-end gap-2 p-2 border rounded-md bg-secondary/30">
+                                        <FormField
+                                            control={form.control}
+                                            name={`skillsDesired.${index}.name`}
+                                            render={({ field }) => (
+                                                <FormItem className="flex-grow">
+                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Skill Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="e.g. Creative Writing" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`skillsDesired.${index}.level`}
+                                            render={({ field }) => (
+                                                <FormItem className="w-[150px]">
+                                                    <FormLabel className={cn(index !== 0 && "sr-only")}>Level</FormLabel>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                <SelectValue placeholder="Select level" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {SKILL_LEVELS.map(level => (
+                                                                <SelectItem key={level} value={level}>{level}</SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="shrink-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                                            onClick={() => removeDesired(index)}
+                                        >
+                                            <X className="h-4 w-4" />
+                                            <span className="sr-only">Remove skill</span>
+                                        </Button>
+                                    </div>
                                 ))}
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="mt-2"
+                                    onClick={() => appendDesired({ name: '', level: 'Beginner' })}
+                                >
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Add Skill
+                                </Button>
+                                <FormMessage>{form.formState.errors.skillsDesired?.message}</FormMessage>
                             </div>
                         </CardContent>
                     </Card>
-                     <Card>
+                     <Card className="lg:col-span-2 xl:col-span-1">
                         <CardHeader>
                             <CardTitle>My Availability</CardTitle>
                             <CardDescription>When are you generally free to connect?</CardDescription>
