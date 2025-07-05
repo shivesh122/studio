@@ -4,12 +4,12 @@
 
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar'
 import { Badge } from '@/components/ui/badge'
-import { Home, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact } from 'lucide-react'
+import { LayoutDashboard, Users, MessageSquare, User as UserIcon, Sparkles, Video, Contact } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 
 const navItems = [
-  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/members', icon: Users, label: 'Find Members' },
   { href: '/matcher', icon: Sparkles, label: 'Matcher' },
   { href: '/pods', icon: Contact, label: 'Community Pods' },

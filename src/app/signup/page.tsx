@@ -36,7 +36,7 @@ export default function SignupPage() {
             <Input id="password" type="password" />
           </div>
           <Button asChild className="w-full">
-            <Link href="/dashboard">Create Account</Link>
+            <Link href="/matcher">Create Account</Link>
           </Button>
         </CardContent>
         <CardFooter className="flex justify-center text-sm">

@@ -37,7 +37,7 @@ export default function LoginPage() {
             <Input id="password" type="password" defaultValue="password" />
           </div>
           <Button asChild className="w-full">
-            <Link href="/dashboard">Sign In</Link>
+            <Link href="/matcher">Sign In</Link>
           </Button>
         </CardContent>
         <CardFooter className="flex justify-center text-sm">
