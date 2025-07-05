@@ -16,7 +16,7 @@ import { getCurrentUser } from "@/lib/data";
 import { Save, PlusCircle, X, Camera } from "lucide-react";
 import Image from "next/image";
 import { cn } from '@/lib/utils';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekends', 'Mornings', 'Afternoons', 'Evenings'] as const;
 const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Expert'] as const;
@@ -52,6 +52,18 @@ export default function ProfilePage() {
     const avatarInputRef = useRef<HTMLInputElement>(null);
     const bannerInputRef = useRef<HTMLInputElement>(null);
 
+    // Load images from localStorage on mount
+    useEffect(() => {
+        const savedAvatar = localStorage.getItem('user_avatar_url');
+        const savedBanner = localStorage.getItem('user_banner_url');
+        if (savedAvatar) {
+            setAvatarPreview(savedAvatar);
+        }
+        if (savedBanner) {
+            setBannerPreview(savedBanner);
+        }
+    }, []);
+
 
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
@@ -79,7 +91,17 @@ export default function ProfilePage() {
 
     function onSubmit(data: ProfileFormValues) {
         // In a real application, you would send this data to your backend to update the user's profile.
-        // For now, we'll just log it and show a success toast.
+        // For this prototype, we'll save the image URLs to localStorage for persistence.
+        if (avatarPreview) {
+            localStorage.setItem('user_avatar_url', avatarPreview);
+        }
+        if (bannerPreview) {
+            localStorage.setItem('user_banner_url', bannerPreview);
+        }
+
+        // Manually trigger a storage event to update other tabs/components
+        window.dispatchEvent(new Event('storage'));
+
         console.log("Profile updated:", {
             ...data,
             avatarUrl: avatarPreview || user.avatarUrl,

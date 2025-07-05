@@ -1,3 +1,5 @@
+'use client'
+
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -6,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Search, LogOut, User, Settings } from 'lucide-react'
 import { getCurrentUser } from '@/lib/data'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
   return (
@@ -22,14 +25,36 @@ export default function Header() {
 
 function UserMenu() {
   const currentUser = getCurrentUser();
+  const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl);
   const fallback = currentUser.name.split(' ').map(n => n[0]).join('');
+
+  useEffect(() => {
+    const savedAvatar = localStorage.getItem('user_avatar_url');
+    if (savedAvatar) {
+      setAvatarUrl(savedAvatar);
+    }
+    
+    // Listen for storage changes to update avatar in real-time if profile is edited in another tab
+    const handleStorageChange = () => {
+        const updatedAvatar = localStorage.getItem('user_avatar_url');
+        if (updatedAvatar) {
+            setAvatarUrl(updatedAvatar);
+        }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+        window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-9 w-9 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint={currentUser.dataAiHint}/>
+            <AvatarImage src={avatarUrl} alt={currentUser.name} data-ai-hint={currentUser.dataAiHint} key={avatarUrl}/>
             <AvatarFallback>{fallback}</AvatarFallback>
           </Avatar>
         </Button>

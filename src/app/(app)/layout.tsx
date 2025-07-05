@@ -6,19 +6,17 @@ import {
   SidebarFooter,
   SidebarInset,
 } from '@/components/ui/sidebar'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
 import Header from '@/components/header'
-import { getCurrentUser } from '@/lib/data'
 import NavLinks from '@/components/nav-links'
 import Link from 'next/link'
+import SidebarUserProfile from '@/components/sidebar-user-profile'
 
 export default function AppLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const currentUser = getCurrentUser();
 
   return (
     <div className="bg-background min-h-screen">
@@ -39,16 +37,7 @@ export default function AppLayout({
           </SidebarContent>
           <SidebarFooter>
             <Separator className="my-2" />
-            <Link href="/profile" className="flex items-center gap-3 p-2 rounded-md hover:bg-sidebar-accent">
-                <Avatar className="h-9 w-9">
-                    <AvatarImage src={currentUser.avatarUrl} alt={currentUser.name} data-ai-hint={currentUser.dataAiHint} />
-                    <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div>
-                    <p className="font-semibold text-sm">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground">View profile</p>
-                </div>
-            </Link>
+            <SidebarUserProfile />
           </SidebarFooter>
         </Sidebar>
         <SidebarInset>

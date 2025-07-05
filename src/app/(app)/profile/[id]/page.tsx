@@ -1,7 +1,9 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getUserById, users } from "@/lib/data";
+import { getCurrentUser, getUserById, users } from "@/lib/data";
 import { Mail, MapPin, CalendarDays, Star, MessageCircle, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -9,15 +11,28 @@ import SendMessageButton from "@/components/send-message-button";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import ReviewCard from "@/components/review-card";
-
-export function generateStaticParams() {
-  return users.map((user) => ({
-    id: user.id,
-  }))
-}
+import { useEffect, useState } from "react";
 
 export default function UserProfilePage({ params }: { params: { id: string } }) {
     const user = getUserById(params.id);
+    const currentUser = getCurrentUser();
+    const isCurrentUserProfile = user?.id === currentUser.id;
+
+    const [avatarUrl, setAvatarUrl] = useState(user?.avatarUrl);
+    const [bannerUrl, setBannerUrl] = useState("https://placehold.co/1200x400.png");
+
+    useEffect(() => {
+        if (isCurrentUserProfile) {
+            const savedAvatar = localStorage.getItem('user_avatar_url');
+            const savedBanner = localStorage.getItem('user_banner_url');
+            if (savedAvatar) {
+                setAvatarUrl(savedAvatar);
+            }
+            if (savedBanner) {
+                setBannerUrl(savedBanner);
+            }
+        }
+    }, [isCurrentUserProfile, user]);
 
     if (!user) {
         notFound();
@@ -29,19 +44,19 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
         <div className="space-y-6">
             <Card className="overflow-hidden">
                 <div className="relative h-48 w-full bg-muted">
-                    <Image src="https://placehold.co/1200x400.png" alt="Profile banner" style={{objectFit: "cover"}} className="object-cover" data-ai-hint="abstract pattern" />
+                    <Image src={bannerUrl!} alt="Profile banner" fill style={{objectFit: "cover"}} className="object-cover" data-ai-hint="abstract pattern" key={bannerUrl} />
                 </div>
                 <CardContent className="relative flex flex-col md:flex-row gap-6 p-6">
                     <div className="-mt-20 md:-mt-24">
                         <Avatar className="h-32 w-32 border-4 border-background">
-                            <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint={user.dataAiHint} />
+                            <AvatarImage src={avatarUrl} alt={user.name} data-ai-hint={user.dataAiHint} key={avatarUrl} />
                             <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </div>
                     <div className="flex-1 pt-2">
                         <div className="flex flex-wrap items-baseline justify-between gap-2">
                             <h1 className="text-2xl font-bold font-headline">{user.name}</h1>
-                            <SendMessageButton user={user} />
+                            {!isCurrentUserProfile && <SendMessageButton user={user} />}
                         </div>
                         <div className="flex items-center flex-wrap gap-x-4 gap-y-2 text-muted-foreground mt-2">
                             <div className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /> {user.location}</div>
@@ -92,7 +107,7 @@ export default function UserProfilePage({ params }: { params: { id: string } }) 
                                     <CardTitle>Ratings & Reviews</CardTitle>
                                     <CardDescription>What others are saying about {user.name.split(' ')[0]}.</CardDescription>
                                 </div>
-                                <Button variant="outline"><MessageCircle className="mr-2" /> Leave Review</Button>
+                                {!isCurrentUserProfile && <Button variant="outline"><MessageCircle className="mr-2 h-4 w-4" /> Leave Review</Button>}
                             </div>
                         </CardHeader>
                         <CardContent className="divide-y">
