@@ -1,3 +1,4 @@
+
 // src/lib/data.ts
 
 export type Skill = {
@@ -15,6 +16,16 @@ export type Review = {
     comment: string;
     date: string;
 };
+
+export type Pod = {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    dataAiHint?: string;
+    members: string[]; // array of user IDs
+    tags: string[];
+}
 
 export type User = {
     id: string;
@@ -35,7 +46,38 @@ export type User = {
         mobile: boolean;
         id: boolean;
     };
+    pods: string[];
 };
+
+export const pods: Pod[] = [
+    {
+        id: 'pod-1',
+        name: 'Greenwood Gardeners',
+        description: 'A pod for local gardening enthusiasts to share tips, tricks, and harvests. From beginners to seasoned green thumbs, all are welcome!',
+        imageUrl: 'https://placehold.co/600x400.png',
+        dataAiHint: 'community garden',
+        members: ['user-1', 'user-4', 'user-6'],
+        tags: ['Gardening', 'Local', 'Sustainable Living']
+    },
+    {
+        id: 'pod-2',
+        name: 'Tech & Code Crew',
+        description: 'Connect with fellow techies in Greenwood. Let\'s talk code, troubleshoot projects, and build cool stuff together.',
+        imageUrl: 'https://placehold.co/600x400.png',
+        dataAiHint: 'people coding together',
+        members: ['user-1', 'user-2', 'user-3', 'user-7', 'user-8'],
+        tags: ['Web Development', 'Programming', 'Tech']
+    },
+    {
+        id: 'pod-3',
+        name: 'Creative Corner',
+        description: 'For artists, writers, musicians, and all creative minds. Share your work, find collaborators, and get inspired.',
+        imageUrl: 'https://placehold.co/600x400.png',
+        dataAiHint: 'art studio',
+        members: ['user-2', 'user-5', 'user-6'],
+        tags: ['Art', 'Writing', 'Music', 'Design']
+    }
+];
 
 export const users: User[] = [
     {
@@ -85,6 +127,7 @@ export const users: User[] = [
             mobile: true,
             id: false,
         },
+        pods: ['pod-1', 'pod-2'],
     },
     {
         id: 'user-2',
@@ -123,6 +166,7 @@ export const users: User[] = [
             mobile: false,
             id: false,
         },
+        pods: ['pod-2', 'pod-3'],
     },
     {
         id: 'user-3',
@@ -150,6 +194,7 @@ export const users: User[] = [
             mobile: true,
             id: false,
         },
+        pods: ['pod-2'],
     },
     {
         id: 'user-4',
@@ -188,6 +233,7 @@ export const users: User[] = [
             mobile: true,
             id: true,
         },
+        pods: ['pod-1'],
     },
     {
         id: 'user-5',
@@ -214,6 +260,7 @@ export const users: User[] = [
             mobile: false,
             id: false,
         },
+        pods: ['pod-3'],
     },
     {
         id: 'user-6',
@@ -241,6 +288,7 @@ export const users: User[] = [
             mobile: true,
             id: true,
         },
+        pods: ['pod-1', 'pod-3'],
     },
     {
         id: 'user-7',
@@ -268,6 +316,7 @@ export const users: User[] = [
             mobile: false,
             id: false,
         },
+        pods: ['pod-2'],
     },
      {
         id: 'user-8',
@@ -295,8 +344,15 @@ export const users: User[] = [
             mobile: true,
             id: false,
         },
+        pods: ['pod-2'],
     },
 ];
+
+// --- NEW DATA FUNCTIONS ---
+export const getPods = (): Pod[] => pods;
+export const getPodById = (id: string): Pod | undefined => pods.find(pod => pod.id === id);
+export const getUsersByIds = (ids: string[]): User[] => users.filter(user => ids.includes(user.id));
+// --- END NEW DATA FUNCTIONS ---
 
 export const getCurrentUser = (): User => users[0];
 
